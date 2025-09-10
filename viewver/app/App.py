@@ -27,3 +27,5 @@ class App(tk.Tk):
         self.schematicViewver.pack(fill=tk.BOTH, expand=True)
 
         self.schematicViewver.add(Component("fct 1", [Net.price, Net.Q], [Net.distance]))
+
+        self.schematicViewver.add(Component("fct 1", [Net.carCost], [Net.price, Net.indi, Net.itot]))

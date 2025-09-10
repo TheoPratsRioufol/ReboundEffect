@@ -15,6 +15,12 @@ class GraphicalItem():
         """Draw the item on the canvas"""
         canvas.create_rectangle(camera.convert4D(50, 50, 200, 150), fill="blue", outline="black", width=2)
 
+    def isSelected(self, x, y):
+        """Check if the component is selected at the coordinate x,y. If yes, return the hitbox, else return False"""
+    
+    def getHitbox(self):
+        """Return the hitbox of the component"""
+
 class Component(GraphicalItem):
     def __init__(self, name, inputNets, outputNets):
         super().__init__()
@@ -57,3 +63,13 @@ class Component(GraphicalItem):
                                text=self.name, 
                                font=("Consolas", int(COMPONENT_TEXT_HEIGHT*camera.zoom), tk.NORMAL),
                                anchor="center")
+        
+    def isSelected(self, x, y):
+        """Check if the component is selected at the coordinate x,y. If yes, return the hitbox, else return False"""
+        if (x > self.x) and (x < self.x + self.w) and (y > self.y) and (y < self.y + self.h):
+            return self.getHitbox()
+        return False
+
+    def getHitbox(self):
+        """Return the hitbox of the component: x0,y0, x1,y1"""
+        return [self.x, self.y, self.x + self.w, self.y + self.h]

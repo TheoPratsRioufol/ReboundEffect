@@ -19,12 +19,12 @@ class Camera():
 
     def zoomArround(self, x, y, zoomin):
         """Zoom around a point"""
-        xlast, ylast = x/self.zoom - self.x, y/self.zoom - self.y # get x,y from the camera world
+        xlast, ylast = self.inverse2D(x, y) # get x,y from the camera world
         if zoomin > 0:
             self.zoom *= 1 + ZOOM_SPEED
         else:
             self.zoom *= 1 - ZOOM_SPEED
-        xnew, ynew = x/self.zoom - self.x, y/self.zoom - self.y # get x,y from the new camera world
+        xnew, ynew = self.inverse2D(x, y) # get x,y from the new camera world
         self.x += (xnew - xlast)
         self.y += (ynew - ylast)
 
@@ -32,6 +32,10 @@ class Camera():
         """Convert a 2D point from the normal space to the camera one"""
         return np.array([(x + self.x)*self.zoom, (y + self.y)*self.zoom])
     
+    def inverse2D(self, x, y):
+        """Convert a 2D point from the window to the absolute referential"""
+        return x/self.zoom - self.x, y/self.zoom - self.y
+
     def convert4D(self, x0, y0, x1, y1):
         """Convert a 4D point from the normal space to the camera one"""
         return *self.convert2D(x0, y0), *self.convert2D(x1, y1)
@@ -43,12 +47,14 @@ class ShematicViewver(tk.Frame):
 
         self.camera = Camera()
         self.gitem = set() # set of graphical items
+        self.currentSelection = None
 
         self.canvas = tk.Canvas(self)
         self.canvas.pack(fill=tk.BOTH, expand=True)
 
         self.canvas.bind_all("<MouseWheel>", self.mouseWheel)
         self.canvas.bind("<B1-Motion>", self.mousePressedMove)
+        self.canvas.bind("<Motion>", self.mouseMove)
         self.canvas.bind("<Button-1>", self.mouseLeftDown)
         self.canvas.bind("<ButtonRelease-1>", self.mouseLeftUp)
 
@@ -64,6 +70,9 @@ class ShematicViewver(tk.Frame):
 
         for gitem in self.gitem:
             gitem.draw(self.canvas, self.camera)
+        
+        if self.currentSelection != None:
+            self.canvas.create_rectangle(self.camera.convert4D(*self.selectionHitbox), fill="blue", outline="black", width=2)
 
     def mouseWheel(self, event):
         """Mouse wheel event (zoom)"""
@@ -83,9 +92,32 @@ class ShematicViewver(tk.Frame):
         self.cameraStartingPt = None
 
     def mousePressedMove(self, event):
-        """Mouse motion"""
+        """Mouse motion + Left down"""
         if self.cameraStartingPt == None:
             return
         self.camera.x = (event.x - self.cameraStartingPt[0])/self.camera.zoom
         self.camera.y = (event.y - self.cameraStartingPt[1])/self.camera.zoom
         self.redraw()
+        self.mouseMove(event)
+
+    def mouseMove(self, event):
+        """Mouse motion"""
+        # Get the mouse position in the absolute referential
+        xmabs, ymabs = self.camera.inverse2D(event.x, event.y)
+        for c in self.gitem:
+            selection = c.isSelected(xmabs, ymabs)
+            if selection != False:
+                self.setSelected(c, selection)
+                return
+        # No selection
+        self.setSelected(None)
+
+    def setSelected(self, component, hitbox=None):
+        """Select a component and draw the hitbox"""
+        if (component == self.currentSelection):
+            # Nothing to do
+            return
+        self.currentSelection = component
+        self.selectionHitbox = hitbox
+        self.redraw()
+                
