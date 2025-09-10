@@ -1,0 +1,89 @@
+import tkinter as tk
+from tkinter import ttk
+
+import sys
+import pathlib
+_parentdir = pathlib.Path(__file__).parent.parent.parent.resolve()
+sys.path.insert(0, str(_parentdir))
+
+from viewver.config.Config import *
+from viewver.gitem.GraphicalItem import *
+
+class Camera():
+    def __init__(self):
+        self.x = 0
+        self.y = 0
+        self.zoom = 1
+
+    def zoomArround(self, x, y, zoomin):
+        """Zoom around a point"""
+        xlast, ylast = self.convert2D(x, y)
+        if zoomin > 0:
+            self.zoom *= 1 + ZOOM_SPEED
+        else:
+            self.zoom *= 1 - ZOOM_SPEED
+        xnew, ynew = self.convert2D(x, y)
+        self.x -= (xnew - xlast)/self.zoom
+        self.y -= (ynew - ylast)/self.zoom
+
+    def convert2D(self, x, y):
+        """Convert a 2D point from the normal space to the camera one"""
+        return (x + self.x)*self.zoom, (y + self.y)*self.zoom
+    
+    def convert4D(self, x0, y0, x1, y1):
+        """Convert a 4D point from the normal space to the camera one"""
+        return *self.convert2D(x0, y0), *self.convert2D(x1, y1)
+    
+
+class ShematicViewver(tk.Frame):
+    def __init__(self, master):
+        super().__init__(master)
+
+        self.camera = Camera()
+        self.gitem = set() # set of graphical items
+
+        self.canvas = tk.Canvas(self, background="red")
+        self.canvas.pack(fill=tk.BOTH, expand=True)
+
+        self.canvas.bind_all("<MouseWheel>", self.mouseWheel)
+        self.canvas.bind("<B1-Motion>", self.mousePressedMove)
+        self.canvas.bind("<Button-1>", self.mouseLeftDown)
+        self.canvas.bind("<ButtonRelease-1>", self.mouseLeftUp)
+
+    def add(self, b):
+        assert isinstance(b, GraphicalItem), "b must be an graphical item"
+        self.gitem.add(b)
+        # Refresh
+        self.redraw()
+
+    def redraw(self):
+        """Redraw the canvas"""
+        self.canvas.delete("all")
+
+        for gitem in self.gitem:
+            gitem.draw(self.canvas, self.camera)
+
+    def mouseWheel(self, event):
+        """Mouse wheel event (zoom)"""
+        # Check if inside the canvas
+        if (event.widget != self.canvas):
+            return
+        self.camera.zoomArround(event.x, event.y, event.delta > 0)
+        self.redraw()
+
+    def mouseLeftDown(self, event):
+        """Mouse left click down"""
+        self.cameraStartingPt = [-self.camera.x + event.x, 
+                                 -self.camera.y + event.y]
+        
+    def mouseLeftUp(self, event):
+        """Mouse left click up"""
+        self.cameraStartingPt = None
+
+    def mousePressedMove(self, event):
+        """Mouse motion"""
+        if self.cameraStartingPt == None:
+            return
+        self.camera.x = event.x - self.cameraStartingPt[0]
+        self.camera.y = event.y - self.cameraStartingPt[1]
+        self.redraw()
