@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+import numpy as np
 
 import sys
 import pathlib
@@ -9,6 +10,7 @@ sys.path.insert(0, str(_parentdir))
 from viewver.config.Config import *
 from viewver.gitem.GraphicalItem import *
 
+
 class Camera():
     def __init__(self):
         self.x = 0
@@ -17,18 +19,18 @@ class Camera():
 
     def zoomArround(self, x, y, zoomin):
         """Zoom around a point"""
-        xlast, ylast = self.convert2D(x, y)
+        xlast, ylast = x/self.zoom - self.x, y/self.zoom - self.y # get x,y from the camera world
         if zoomin > 0:
             self.zoom *= 1 + ZOOM_SPEED
         else:
             self.zoom *= 1 - ZOOM_SPEED
-        xnew, ynew = self.convert2D(x, y)
-        self.x -= (xnew - xlast)/self.zoom
-        self.y -= (ynew - ylast)/self.zoom
+        xnew, ynew = x/self.zoom - self.x, y/self.zoom - self.y # get x,y from the new camera world
+        self.x += (xnew - xlast)
+        self.y += (ynew - ylast)
 
     def convert2D(self, x, y):
         """Convert a 2D point from the normal space to the camera one"""
-        return (x + self.x)*self.zoom, (y + self.y)*self.zoom
+        return np.array([(x + self.x)*self.zoom, (y + self.y)*self.zoom])
     
     def convert4D(self, x0, y0, x1, y1):
         """Convert a 4D point from the normal space to the camera one"""
@@ -42,7 +44,7 @@ class ShematicViewver(tk.Frame):
         self.camera = Camera()
         self.gitem = set() # set of graphical items
 
-        self.canvas = tk.Canvas(self, background="red")
+        self.canvas = tk.Canvas(self)
         self.canvas.pack(fill=tk.BOTH, expand=True)
 
         self.canvas.bind_all("<MouseWheel>", self.mouseWheel)
@@ -73,8 +75,8 @@ class ShematicViewver(tk.Frame):
 
     def mouseLeftDown(self, event):
         """Mouse left click down"""
-        self.cameraStartingPt = [-self.camera.x + event.x, 
-                                 -self.camera.y + event.y]
+        self.cameraStartingPt = [-self.camera.x*self.camera.zoom + event.x, 
+                                 -self.camera.y*self.camera.zoom + event.y]
         
     def mouseLeftUp(self, event):
         """Mouse left click up"""
@@ -84,6 +86,6 @@ class ShematicViewver(tk.Frame):
         """Mouse motion"""
         if self.cameraStartingPt == None:
             return
-        self.camera.x = event.x - self.cameraStartingPt[0]
-        self.camera.y = event.y - self.cameraStartingPt[1]
+        self.camera.x = (event.x - self.cameraStartingPt[0])/self.camera.zoom
+        self.camera.y = (event.y - self.cameraStartingPt[1])/self.camera.zoom
         self.redraw()

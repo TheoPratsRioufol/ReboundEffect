@@ -8,6 +8,7 @@ sys.path.insert(0, str(_parentdir))
 
 from viewver.gitem.SchematicViewver import *
 from viewver.gitem.GraphicalItem import *
+from Utils import *
 
 if __name__ == '__main__':
     import Main
@@ -25,4 +26,4 @@ class App(tk.Tk):
         self.schematicViewver = ShematicViewver(self.mainPane)
         self.schematicViewver.pack(fill=tk.BOTH, expand=True)
 
-        self.schematicViewver.add(GraphicalItem())
+        self.schematicViewver.add(Component("fct 1", [Net.price, Net.Q], [Net.distance]))
