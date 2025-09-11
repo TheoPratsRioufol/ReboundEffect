@@ -9,6 +9,7 @@ sys.path.insert(0, str(_parentdir))
 
 from viewver.config.Config import *
 from viewver.gitem.GraphicalItem import *
+from viewver.gitem.NetlistExtractor import *
 
 
 class Camera():
@@ -46,23 +47,32 @@ class ShematicViewver(tk.Frame):
         super().__init__(master)
 
         self.camera = Camera()
-        self.gitem = set() # set of graphical items
+        self.gitem = {} # dic of graphical items
         self.currentSelection = None
+        self.idcounter = 0
 
         self.canvas = tk.Canvas(self)
         self.canvas.pack(fill=tk.BOTH, expand=True)
 
         self.canvas.bind_all("<MouseWheel>", self.mouseWheel)
-        self.canvas.bind("<B2-Motion>", self.mousePressedMiddleMove)
+        self.canvas.bind("<B3-Motion>", self.mousePressedRigthMove)
         self.canvas.bind("<B1-Motion>", self.mousePressedLeftMove)
         self.canvas.bind("<Motion>", self.mouseMove)
         self.canvas.bind("<Button-1>", self.mouseLeftDown)
-        self.canvas.bind("<Button-2>", self.mouseMiddleDown)
+        self.canvas.bind("<Button-3>", self.mouseRigthDown)
         self.canvas.bind("<ButtonRelease-1>", self.mouseLeftUp)
 
-    def add(self, b):
+    def getUniqueId(self):
+        """Return an unique id for a gitem"""
+        self.idcounter += 1
+        return self.idcounter
+
+    def add(self, b, gid=None):
+        """Add a Graphical item to be displayed"""
         assert isinstance(b, GraphicalItem), "b must be an graphical item"
-        self.gitem.add(b)
+        if gid == None:
+            gid = self.getUniqueId()
+        self.gitem[gid] = b
         # Refresh
         self.redraw()
 
@@ -70,11 +80,11 @@ class ShematicViewver(tk.Frame):
         """Redraw the canvas"""
         self.canvas.delete("all")
 
-        for gitem in self.gitem:
-            gitem.draw(self.canvas, self.camera)
+        for gid in self.gitem:
+            self.gitem[gid].draw(self.canvas, self.camera)
         
         if self.currentSelection != None:
-            self.canvas.create_rectangle(self.camera.convert4D(*self.selectionHitbox), outline="blue", width=3)
+            self.currentSelection.drawHighlight(self.canvas, self.camera)
 
     def mouseWheel(self, event):
         """Mouse wheel event (zoom)"""
@@ -96,16 +106,16 @@ class ShematicViewver(tk.Frame):
             # Sate the component orifinal position
             self.selectionOrigin = self.currentSelection.getPos()
         
-    def mouseMiddleDown(self, event):
-        """Mouse Middle click down"""
+    def mouseRigthDown(self, event):
+        """Mouse Rigth click down"""
         self.saveMouseStartingPos(event)
 
     def mouseLeftUp(self, event):
         """Mouse left click up"""
         self.cameraStartingPt = None
 
-    def mousePressedMiddleMove(self, event):
-        """Mouse motion + Middle down"""
+    def mousePressedRigthMove(self, event):
+        """Mouse motion + Rigth down"""
         if self.cameraStartingPt == None:
             return
         self.camera.x = (event.x - self.cameraStartingPt[0])/self.camera.zoom
@@ -121,27 +131,68 @@ class ShematicViewver(tk.Frame):
             x0, y0 = self.selectionOrigin
             self.currentSelection.moveTo(xabs + x0, yabs + y0)
             # Update the hitbox
-            self.selectionHitbox = self.currentSelection.getHitbox()
             self.redraw()
 
     def mouseMove(self, event):
         """Mouse motion"""
         # Get the mouse position in the absolute referential
         xmabs, ymabs = self.camera.inverse2D(event.x, event.y)
-        for c in self.gitem:
-            selection = c.isSelected(xmabs, ymabs)
-            if selection != False:
-                self.setSelected(c, selection)
+        for gid in self.gitem:
+            c = self.gitem[gid]
+            if c.isSelected(xmabs, ymabs):
+                self.setSelected(c)
                 return
         # No selection
         self.setSelected(None)
 
-    def setSelected(self, component, hitbox=None):
+    def setSelected(self, component):
         """Select a component and draw the hitbox"""
         if (component == self.currentSelection):
             # Nothing to do
             return
         self.currentSelection = component
-        self.selectionHitbox = hitbox
         self.redraw()
+
+    def reset(self):
+        """Reset this component"""
+        self.setSelected(None)
+        self.gitem = {}
+        self.canvas.delete("all")
                 
+    def getSaveDic(self):
+        """Return the saving dic of this component"""
+        save = {}
+        save['components'] = {}
+        save['idcounter'] = self.idcounter
+        for gid in self.gitem:
+            c = self.gitem[gid]
+            if isinstance(c, Component):
+                save['components'][gid] = c.getSaveDic()
+
+        return save
+
+    def load(self, save):
+        """Load a save dic"""
+        self.idcounter = save['idcounter']
+        for gid in save['components']:
+            # Try to find the gitem
+            if (gid in self.gitem):
+                # the component already exist
+                self.gitem[gid].updateFromSave(save['components'][gid])
+            else:
+                self.add(Component.initFromSave(save['components'][gid]))
+
+    def loadNetlistFromPath(self, netistPath, templatePath):
+        """Load a netlist from a path"""
+        with open(netistPath, 'r') as f:
+            netlist = f.read()
+        with open(templatePath, 'r') as f:
+            template = f.read()
+        self.reset()
+        extractedGitem, netdic = NetlistExtractor.extract(netlist, template)
+        for gid in extractedGitem:
+            self.add(extractedGitem[gid], gid)
+
+        for net in netdic:
+            self.add(GraphicalNet(net, [self.gitem[gid] for gid in netdic[net]]))
+        

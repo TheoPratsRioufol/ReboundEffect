@@ -1,0 +1,18 @@
+Voiture (Net.x Net.efficiency) Voiture
+Comportement_Routier (Net.law Net.efficiency Net.distance) Comportement_Routier
+Comportement_Achats (Net.law Net.efficiency Net.price Net.Q Net.people) Comportement_Achats
+Usage_cost (Net.law Net.efficiency Net.distance Net.useCost) Usage_cost
+Owner_cost (Net.useCost Net.price Net.budget) Owner_cost
+Direct_Impact (Net.x Net.Q Net.lci) Direct_Impact
+Spending_model (Net.budget Net.spending) Spending_model
+Spendings (Net.spending Net.people Net.spendings) Spendings
+Indirect_Impact (Net.spendings Net.people Net.indi) Indirect_Impact
+Total_impacts (Net.indi Net.lci Net.itot) Total_impacts
+Production_cost (Net.x Net.law Net.Q Net.prodCost) Production_cost
+C.A (Net.price Net.Q Net.sales) C.A
+Benefits (Net.sales Net.prodCost Net.benefits) Benefits
+Social_well_being (Net.x Net.socialWellBeing) Social_well_being
+State (Net.law) vsource dc=[0.1952, 0]
+Design (Net.x) vsource dc=[45, 75, 485]
+Price (Net.price) vsource dc=7990
+0 (Net.efficiency) vsweep x0=3.65 x0=10.95

@@ -35,14 +35,20 @@ netlist.add(Constant("Price", Net.price, p0))
 
 #netlist.add(OverrideNet(SweepBetween("Price", Net.price, p0, p0))) # Overrride signals
 #netlist.add(OverrideNet(SweepBetween("Design", Net.x, [45, 300, 485], [45, 75, 600])))
-netlist.add(OverrideNet(SweepBetween("", Net.efficiency, 0.5*eff_i, 1.5*eff_i)))
+netlist.add(OverrideNet(SweepBetween("0", Net.efficiency, 0.5*eff_i, 1.5*eff_i)))
 
-netlist.run()
+with open('netlist.txt', 'w') as f:
+    f.write(netlist.serialize())
 
-def plotn(net1, net2):
+with open('blockTemplate.txt', 'w') as f:
+    f.write(netlist.generateTemplate())
+
+#netlist.run()
+
+"""def plotn(net1, net2):
     plt.plot(netlist.get(net1), netlist.get(net2), label=net2.value)
 
 plotn(Net.t, Net.distance)
 
 plt.legend()
-plt.show()
+plt.show()"""

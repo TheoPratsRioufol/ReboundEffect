@@ -23,6 +23,9 @@ class Net(Enum):
     socialWellBeing = 'Social well being'
     t = 't'
 
+def noSpace(txt):
+    return txt.replace(' ', '_')
+
 class Block():
     """Represent a model.
     Take nets at the input (i.e variables) and output net (variables)"""
@@ -50,6 +53,13 @@ class Block():
     def getName(self):
         """Return the block's name"""
         return self.name
+    
+    def serialize(self):
+        """Return a serialized version of this bloc"""
+        return f"{noSpace(self.name)} (" + " ".join([str(n) for n in self.inNets]) + ' ' + " ".join([str(n) for n in self.outNets]) + f") {noSpace(self.name)}"
+
+    def generateTemplate(self):
+        return f"{noSpace(self.name)} {len(self.inNets)} {len(self.outNets)}"
 
 class ImposedNet():
     def __init__(self, name, net):
@@ -64,6 +74,10 @@ class ImposedNet():
         """Return the net"""
         return self.net
     
+    def serialize(self):
+        """Return a serialized version of this bloc"""
+        return None
+    
 class OverrideNet():
     def __init__(self, c):
         self.c = c
@@ -71,6 +85,14 @@ class OverrideNet():
     def getC(self):
         """return the component"""
         return self.c
+    
+    def serialize(self):
+        """Return a serialized version of this bloc"""
+        return self.c.serialize()
+    
+    def generateTemplate(self):
+        """Generate a template for the model block"""
+        return self.c.generateTemplate()
 
 class Constant(ImposedNet):
     """Represent a constant input"""
@@ -82,6 +104,14 @@ class Constant(ImposedNet):
         """Return the value of the net at t"""
         return self.value
     
+    def serialize(self):
+        """Return a serialized version of this bloc"""
+        return f"{noSpace(self.name)} ({self.net}) vsource dc=" + str(self.value)
+    
+    def generateTemplate(self):
+        """Generate a template for the model block"""
+        return f"vsource 0 1"
+
 class Sweep(ImposedNet):
     """Add a sweep"""
     def __init__(self, name, net, f):
@@ -92,10 +122,21 @@ class Sweep(ImposedNet):
         """Return the value of the net at t"""
         return self.f(t)
     
+    def generateTemplate(self):
+        """Generate a template for the model block"""
+        return f"vsweep 0 1"
+    
+    
 class SweepBetween(Sweep):
     def __init__(self, name, net, xi, xf):
         super().__init__(name, net, lambda t: (np.array(xf)-np.array(xi))*t+np.array(xi))
+        self.xi = xi
+        self.xf = xf
 
+    def serialize(self):
+        """Return a serialized version of this bloc"""
+        return f"{noSpace(self.name)} ({self.net}) vsweep x0={self.xi} x0={self.xf}"
+    
 class Netlist():
     """Represents the model connexion"""
 
@@ -164,3 +205,17 @@ class Netlist():
     def get(self, net):
         """Return a net value"""
         return self.computedNetOnInterval[net]
+    
+    def serialize(self):
+        """Return a writen netlist"""
+        text = ""
+        for c in self.content:
+            text += c.serialize() + "\n"
+        return text
+    
+    def generateTemplate(self):
+        """Generate a template for the model block"""
+        text = ""
+        for c in self.content:
+            text += c.generateTemplate() + '\n'
+        return text

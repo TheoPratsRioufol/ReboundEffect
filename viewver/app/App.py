@@ -9,6 +9,7 @@ sys.path.insert(0, str(_parentdir))
 from viewver.gitem.SchematicViewver import *
 from viewver.gitem.GraphicalItem import *
 from Utils import *
+import json
 
 if __name__ == '__main__':
     import Main
@@ -20,12 +21,41 @@ class App(tk.Tk):
         self.geometry(f"600x600+{50}+{50}")
         self.mainPane = tk.Frame(self)
         self.mainPane.pack(fill=tk.BOTH, expand=True)
+        self.buildMenu()
         self.build()
 
     def build(self):
+        """Add the main components of the window"""
         self.schematicViewver = ShematicViewver(self.mainPane)
         self.schematicViewver.pack(fill=tk.BOTH, expand=True)
 
-        self.schematicViewver.add(Component("fct 1", [Net.price, Net.Q], [Net.distance]))
+        self.schematicViewver.loadNetlistFromPath('netlist.txt', 'blockTemplate.txt')
+        self.load()
+        self.schematicViewver.redraw()
 
-        self.schematicViewver.add(Component("fct 1", [Net.carCost], [Net.price, Net.indi, Net.itot]))
+    def buildMenu(self):
+        """Build a menubar"""
+        menubar = tk.Menu(self)
+        self.config(menu=menubar)
+
+        file_menu = tk.Menu(menubar)
+
+        file_menu.add_command(label='Load', command=self.load)
+        file_menu.add_command(label='Save', command=self.save)
+
+        menubar.add_cascade(label="File", menu=file_menu)
+
+    def load(self):
+        """Load a netlist"""
+        # Load to file
+        with open('save.json', 'r') as f:
+            save = json.load(f)
+        self.schematicViewver.load(save['schematicViewver'])
+
+    def save(self):
+        """Save a netlist"""
+        save = {}
+        save['schematicViewver'] = self.schematicViewver.getSaveDic()
+        # Save to file
+        with open('save.json', 'w') as f:
+            json.dump(save, f, indent=4)
