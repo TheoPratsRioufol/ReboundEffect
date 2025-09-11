@@ -10,6 +10,7 @@ sys.path.insert(0, str(_parentdir))
 from viewver.config.Config import *
 from viewver.gitem.GraphicalItem import *
 from viewver.gitem.NetlistExtractor import *
+from viewver.gitem.WaveViewver import *
 
 
 class Camera():
@@ -50,6 +51,9 @@ class ShematicViewver(tk.Frame):
         self.gitem = {} # dic of graphical items
         self.currentSelection = None
         self.idcounter = 0
+
+        # To inspect signals
+        self.waveViewver = WaveViewver()
 
         self.canvas = tk.Canvas(self)
         self.canvas.pack(fill=tk.BOTH, expand=True)
@@ -105,6 +109,7 @@ class ShematicViewver(tk.Frame):
         if (self.currentSelection != None):
             # Sate the component orifinal position
             self.selectionOrigin = self.currentSelection.getPos()
+            self.waveViewver.setSelection(self.currentSelection)
         
     def mouseRigthDown(self, event):
         """Mouse Rigth click down"""
@@ -143,6 +148,7 @@ class ShematicViewver(tk.Frame):
                 self.setSelected(c)
                 return
         # No selection
+        self.waveViewver.setSelection(None)
         self.setSelected(None)
 
     def setSelected(self, component):

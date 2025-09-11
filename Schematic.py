@@ -43,7 +43,10 @@ with open('netlist.txt', 'w') as f:
 with open('blockTemplate.txt', 'w') as f:
     f.write(netlist.generateTemplate())
 
-#netlist.run()
+netlist.run()
+
+traces = {str(net):{'x':netlist.getXtrace(),
+                    'y':netlist.get(net)} for net in netlist.getAllNets()}
 
 """def plotn(net1, net2):
     plt.plot(netlist.get(net1), netlist.get(net2), label=net2.value)

@@ -50,6 +50,13 @@ class Block():
         """REturn the outputs"""
         return self.outNets
     
+    def getAllNets(self):
+        """Return a set of all the nets"""
+        nets = set()
+        nets.update(self.getInputs())
+        nets.update(self.getOutputs())
+        return nets
+    
     def getName(self):
         """Return the block's name"""
         return self.name
@@ -65,6 +72,10 @@ class ImposedNet():
     def __init__(self, name, net):
         self.name = name
         self.net = net
+
+    def getAllNets(self):
+        """Return a set of all the nets"""
+        return set([self.net])
 
     def getValue(self, t):
         """Return the value of the net at t"""
@@ -85,6 +96,10 @@ class OverrideNet():
     def getC(self):
         """return the component"""
         return self.c
+    
+    def getAllNets(self):
+        """Return a set of all the nets"""
+        return self.c.getAllNets()
     
     def serialize(self):
         """Return a serialized version of this bloc"""
@@ -190,7 +205,7 @@ class Netlist():
     def run(self):
         """Run the simulation for t in [0, 1]"""
         self.computedNetOnInterval = {}
-        for t in np.linspace(0, 1):
+        for t in self.getXtrace():
             self.image(t)
             # Save
             for net in self.computedNet:
@@ -201,6 +216,16 @@ class Netlist():
         for net in self.computedNetOnInterval:
             self.computedNetOnInterval[net] = np.array(self.computedNetOnInterval[net])
 
+    def getXtrace(self):
+        """Return the time trace of the simulation"""
+        return np.linspace(0, 1)
+
+    def getAllNets(self):
+        """Return a set of all the net of the circuit"""
+        nets = set()
+        for c in self.content:
+            nets.update(c.getAllNets())
+        return nets
 
     def get(self, net):
         """Return a net value"""

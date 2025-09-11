@@ -54,6 +54,10 @@ class GraphicalNet(GraphicalItem):
         self.linew = 2
         self.updateLines()
 
+    def getName(self):
+        """Return the name of this component"""
+        return self.name
+
     def updateLines(self):
         self.pts = []
         for c in self.components:
@@ -97,6 +101,10 @@ class Component(GraphicalItem):
 
         self.h = COMPONENT_TEXT_MARGIN*(max(len(inputNets), len(outputNets))+1) # heigth of the box
         self.w = 3*COMPONENT_TEXT_MARGIN + COMPONENT_TEXT_WIDTH*(max([len(net) for net in inputNets] + [0]) + max([len(net) for net in outputNets] + [0])) # width of the box
+
+    def getName(self):
+        """Return the name of the component"""
+        return self.name
 
     def getNet2D(self, name):
         """Return the 2D position of the net name"""
