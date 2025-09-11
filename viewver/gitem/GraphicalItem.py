@@ -9,7 +9,13 @@ from viewver.config.Config import *
 
 class GraphicalItem():
     def __init__(self):
-        pass
+        self.x = 0
+        self.y = 0
+
+    def moveTo(self, x, y):
+        """Move the component"""
+        self.x = x
+        self.y = y
 
     def draw(self, canvas, camera):
         """Draw the item on the canvas"""
@@ -20,6 +26,10 @@ class GraphicalItem():
     
     def getHitbox(self):
         """Return the hitbox of the component"""
+
+    def getPos(self):
+        """Return the component position"""
+        return self.x, self.y
 
 class Component(GraphicalItem):
     def __init__(self, name, inputNets, outputNets):
@@ -34,9 +44,6 @@ class Component(GraphicalItem):
 
         self.h = COMPONENT_TEXT_MARGIN*(max(len(inputNets), len(outputNets))+1) # heigth of the box
         self.w = 3*COMPONENT_TEXT_MARGIN + COMPONENT_TEXT_WIDTH*(max([len(net.value) for net in inputNets]) + max([len(net.value) for net in outputNets])) # width of the box
-
-        self.x = 0
-        self.y = 0
 
     def draw(self, canvas, camera):
         """Draw the item on the canvas"""

@@ -53,9 +53,11 @@ class ShematicViewver(tk.Frame):
         self.canvas.pack(fill=tk.BOTH, expand=True)
 
         self.canvas.bind_all("<MouseWheel>", self.mouseWheel)
-        self.canvas.bind("<B1-Motion>", self.mousePressedMove)
+        self.canvas.bind("<B2-Motion>", self.mousePressedMiddleMove)
+        self.canvas.bind("<B1-Motion>", self.mousePressedLeftMove)
         self.canvas.bind("<Motion>", self.mouseMove)
         self.canvas.bind("<Button-1>", self.mouseLeftDown)
+        self.canvas.bind("<Button-2>", self.mouseMiddleDown)
         self.canvas.bind("<ButtonRelease-1>", self.mouseLeftUp)
 
     def add(self, b):
@@ -72,7 +74,7 @@ class ShematicViewver(tk.Frame):
             gitem.draw(self.canvas, self.camera)
         
         if self.currentSelection != None:
-            self.canvas.create_rectangle(self.camera.convert4D(*self.selectionHitbox), fill="blue", outline="black", width=2)
+            self.canvas.create_rectangle(self.camera.convert4D(*self.selectionHitbox), outline="blue", width=3)
 
     def mouseWheel(self, event):
         """Mouse wheel event (zoom)"""
@@ -82,23 +84,45 @@ class ShematicViewver(tk.Frame):
         self.camera.zoomArround(event.x, event.y, event.delta > 0)
         self.redraw()
 
-    def mouseLeftDown(self, event):
-        """Mouse left click down"""
+    def saveMouseStartingPos(self, event):
+        """Save the mouse starting position"""
         self.cameraStartingPt = [-self.camera.x*self.camera.zoom + event.x, 
                                  -self.camera.y*self.camera.zoom + event.y]
+
+    def mouseLeftDown(self, event):
+        """Mouse left click down"""
+        self.saveMouseStartingPos(event)
+        if (self.currentSelection != None):
+            # Sate the component orifinal position
+            self.selectionOrigin = self.currentSelection.getPos()
         
+    def mouseMiddleDown(self, event):
+        """Mouse Middle click down"""
+        self.saveMouseStartingPos(event)
+
     def mouseLeftUp(self, event):
         """Mouse left click up"""
         self.cameraStartingPt = None
 
-    def mousePressedMove(self, event):
-        """Mouse motion + Left down"""
+    def mousePressedMiddleMove(self, event):
+        """Mouse motion + Middle down"""
         if self.cameraStartingPt == None:
             return
         self.camera.x = (event.x - self.cameraStartingPt[0])/self.camera.zoom
         self.camera.y = (event.y - self.cameraStartingPt[1])/self.camera.zoom
         self.redraw()
         self.mouseMove(event)
+
+    def mousePressedLeftMove(self, event):
+        """Mouse motion + Left down"""
+        # get the translation in the absolute referential
+        xabs, yabs = self.camera.inverse2D(event.x - self.cameraStartingPt[0], event.y - self.cameraStartingPt[1])
+        if (self.currentSelection != None):
+            x0, y0 = self.selectionOrigin
+            self.currentSelection.moveTo(xabs + x0, yabs + y0)
+            # Update the hitbox
+            self.selectionHitbox = self.currentSelection.getHitbox()
+            self.redraw()
 
     def mouseMove(self, event):
         """Mouse motion"""
