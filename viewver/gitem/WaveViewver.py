@@ -16,11 +16,12 @@ from viewver.gitem.GraphicalItem import *
 from Schematic import *
 
 class WaveViewver(tk.Toplevel):
-    def __init__(self):
+    def __init__(self, schematicViewver):
         super().__init__()
         self.wm_title("Waveform")
         self.geometry("400x400")
 
+        self.schematicViewver = schematicViewver
         self.name = tk.StringVar()
         self.visible = True
 

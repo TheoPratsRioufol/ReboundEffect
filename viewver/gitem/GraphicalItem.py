@@ -50,8 +50,8 @@ class GraphicalNet(GraphicalItem):
         """Represent a net"""
         self.components = components
         self.name = name
-        self.fill = "red"
-        self.linew = 2
+        self.fill = "purple"
+        self.linew = 1
         self.updateLines()
 
     def getName(self):
@@ -60,8 +60,10 @@ class GraphicalNet(GraphicalItem):
 
     def updateLines(self):
         self.pts = []
+        self.terminals = []
         for c in self.components:
             self.pts.append(c.getNet2D(self.name))
+            self.terminals.append(c.getNetTerminal4D(self.name))
 
     def draw(self, canvas, camera):
         """Draw the item on the canvas"""
@@ -71,12 +73,18 @@ class GraphicalNet(GraphicalItem):
 
     def isSelected(self, x, y):
         """Check if the component is selected at the coordinate x,y. If yes, return the hitbox, else return False"""
-        M = np.array([x, y])
-        for i in range(1, len(self.pts)):
-            A = np.array(self.pts[i-1])
-            B = np.array(self.pts[i])
-            
-            if (np.linalg.norm(A-M) + np.linalg.norm(B-M) - np.linalg.norm(A-B) < HITBOX_LINE):
+        if False:
+            # Check for line hover
+            M = np.array([x, y])
+            for i in range(1, len(self.pts)):
+                A = np.array(self.pts[i-1])
+                B = np.array(self.pts[i])
+                
+                if (np.linalg.norm(A-M) + np.linalg.norm(B-M) - np.linalg.norm(A-B) < HITBOX_LINE):
+                    return True
+        # Check for teminal hover
+        for t4d in self.terminals:
+            if (t4d[0] < x) and (t4d[2] > x) and (t4d[1] < y) and (t4d[3] > y):
                 return True
         return False
     
@@ -85,6 +93,10 @@ class GraphicalNet(GraphicalItem):
         oldw = self.linew
         self.linew = 4
         self.draw(canvas, camera)
+        # Then draw the terminals
+        for t4d in self.terminals:
+            canvas.create_rectangle(camera.convert4D(*t4d), fill="white", outline=self.fill, width=self.linew)
+        
         self.linew = oldw
 
 
@@ -119,6 +131,16 @@ class Component(GraphicalItem):
             if (name == name):
                 return self.x + self.w, self.y+ylabel
         return None
+    
+    def getNetTerminal4D(self, name):
+        """Return the 4D position of a net terminal"""
+        pos = self.getNet2D(name)
+        if pos == None:
+            return None
+        return [pos[0] - NET_PIN_HSIZE,
+                pos[1] - NET_PIN_HSIZE,
+                pos[0] + NET_PIN_HSIZE,
+                pos[1] + NET_PIN_HSIZE,]
 
     def draw(self, canvas, camera):
         """Draw the item on the canvas"""

@@ -11,6 +11,7 @@ from viewver.config.Config import *
 from viewver.gitem.GraphicalItem import *
 from viewver.gitem.NetlistExtractor import *
 from viewver.gitem.WaveViewver import *
+from viewver.gitem.WaveController import *
 
 
 class Camera():
@@ -53,7 +54,8 @@ class ShematicViewver(tk.Frame):
         self.idcounter = 0
 
         # To inspect signals
-        self.waveViewver = WaveViewver()
+        self.waveViewvers = set()
+        self.waveControllers = set()
 
         self.canvas = tk.Canvas(self)
         self.canvas.pack(fill=tk.BOTH, expand=True)
@@ -107,9 +109,20 @@ class ShematicViewver(tk.Frame):
         """Mouse left click down"""
         self.saveMouseStartingPos(event)
         if (self.currentSelection != None):
-            # Sate the component orifinal position
+            # Sate the component original position
             self.selectionOrigin = self.currentSelection.getPos()
-            self.waveViewver.setSelection(self.currentSelection)
+
+            # If net, actions are available:
+            if isinstance(self.currentSelection, GraphicalNet):
+                if event.state & 0x4:
+                    # If Crt down
+                    waveController = WaveController(self)
+                    waveController.setSelection(self.currentSelection)
+                    self.waveControllers.add(waveController)
+                else:
+                    waveViewver = WaveViewver(self)
+                    waveViewver.setSelection(self.currentSelection)
+                    self.waveViewvers.add(waveViewver)
         
     def mouseRigthDown(self, event):
         """Mouse Rigth click down"""
@@ -142,14 +155,17 @@ class ShematicViewver(tk.Frame):
         """Mouse motion"""
         # Get the mouse position in the absolute referential
         xmabs, ymabs = self.camera.inverse2D(event.x, event.y)
+        selected = None
         for gid in self.gitem:
             c = self.gitem[gid]
             if c.isSelected(xmabs, ymabs):
-                self.setSelected(c)
-                return
+                selected = c
+                # bypass if net
+                if isinstance(c, GraphicalNet):
+                    self.setSelected(selected)
+                    return
         # No selection
-        self.waveViewver.setSelection(None)
-        self.setSelected(None)
+        self.setSelected(selected)
 
     def setSelected(self, component):
         """Select a component and draw the hitbox"""
