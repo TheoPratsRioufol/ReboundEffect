@@ -23,6 +23,12 @@ class Net(Enum):
     socialWellBeing = 'Social well being'
     t = 't'
 
+    def getNetFromName(name):
+        for e in Net:
+            if str(e) == name:
+                return e
+        raise Exception(f"Not Net object found for {name}")
+
 def noSpace(txt):
     return txt.replace(' ', '_')
 
@@ -73,6 +79,9 @@ class ImposedNet():
         self.name = name
         self.net = net
 
+    def getName(self):
+        return self.name
+
     def getAllNets(self):
         """Return a set of all the nets"""
         return set([self.net])
@@ -118,6 +127,9 @@ class Constant(ImposedNet):
     def getValue(self, t):
         """Return the value of the net at t"""
         return self.value
+    
+    def setValue(self, v):
+        self.value = v
     
     def serialize(self):
         """Return a serialized version of this bloc"""
@@ -165,6 +177,13 @@ class Netlist():
     def add(self, c):
         """Add a component to the netlist"""
         self.content.append(c)
+
+    def forcedImage(self, fnet, netv):
+        """Compute the net value while forcing the value of fnet"""
+        for c in self.content:
+            if isinstance(c, Constant) and c.getName() == fnet:
+                c.setValue(netv)
+        self.image(0)
 
     def image(self, t):
         """Run the simulation at time t"""
@@ -226,7 +245,7 @@ class Netlist():
 
     def getAllNets(self):
         """Return a set of all the net of the circuit"""
-        nets = set()
+        nets = set([Net.t])
         for c in self.content:
             nets.update(c.getAllNets())
         return nets
@@ -234,6 +253,10 @@ class Netlist():
     def get(self, net):
         """Return a net value"""
         return self.computedNetOnInterval[net]
+    
+    def getInstantanedNetValue(self, net):
+        """Return instantenous net value"""
+        return self.computedNet[net]
     
     def serialize(self):
         """Return a writen netlist"""

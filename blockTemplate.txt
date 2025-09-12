@@ -15,4 +15,3 @@ Social_well_being 1 1
 vsource 0 1
 vsource 0 1
 vsource 0 1
-vsweep 0 1

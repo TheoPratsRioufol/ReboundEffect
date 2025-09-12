@@ -12,7 +12,6 @@ Production_cost (Net.x Net.law Net.Q Net.prodCost) Production_cost
 C.A (Net.price Net.Q Net.sales) C.A
 Benefits (Net.sales Net.prodCost Net.benefits) Benefits
 Social_well_being (Net.x Net.socialWellBeing) Social_well_being
-State (Net.law) vsource dc=[0.1952, 0]
-Design (Net.x) vsource dc=[45, 75, 485]
-Price (Net.price) vsource dc=7990
-0 (Net.efficiency) vsweep x0=3.65 x0=10.95
+Net.law (Net.law) vsource dc=[0.1952, 0]
+Net.x (Net.x) vsource dc=[45, 75, 485]
+Net.price (Net.price) vsource dc=7990

@@ -38,9 +38,11 @@ class WaveController(tk.Toplevel):
         self.controlledNet = net
         self.schematicViewver = schematicViewver
 
-        netname = self.controlledNet.getName()
-        value = traces[netname]['y'][0]
-        self.titlevar.set(f'>>{netname}<<, inital value: {value}')
+        self.protocol("WM_DELETE_WINDOW", self.kill)
+
+        
+        self.titlevar.set(f'>>{net.getName()}<<, inital value: {self.getNetValue()}')
+        value = self.getNetValue()
         self.setValue(value)
 
         # set the value for min and max
@@ -64,12 +66,28 @@ class WaveController(tk.Toplevel):
 
     def valueChanged(self, a, b, c):
         """Triggered when the forced value has changed"""
-        alpha = self.scaleVar.get()
+        alpha = int(NB_STEP_FORCED_VALUE*self.scaleVar.get())/NB_STEP_FORCED_VALUE
         min = varToFloat(self.min)
         max = varToFloat(self.max)
         v = alpha*(max - min) + min
         self.setValue(v)
+        self.schematicViewver.forcedInput(self.controlledNet.getName(), v)
+
 
     def setValue(self, v):
         """Set the value of the controlled net"""
         self.valuevar.set('Current value: {:.2f}'.format(v))
+        
+    def refreshWave(self):
+        """Refresh the wave value"""
+        self.setValue(self.getNetValue())
+
+    def getNetValue(self):
+        """Return the value of the controlled net"""
+        netname = self.controlledNet.getName()
+        return traces[netname]['y'][0]
+    
+    def kill(self):
+        self.schematicViewver.closeController(self)
+        self.destroy()
+        print("killed")

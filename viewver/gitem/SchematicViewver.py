@@ -52,6 +52,12 @@ class ShematicViewver(tk.Frame):
         self.gitem = {} # dic of graphical items
         self.currentSelection = None
         self.idcounter = 0
+        
+        self.waveControllers = set()
+        self.waveViewvers = set()
+
+        self.lastForcedNet = None # Last forced input net
+        self.resetForcedTrace()
 
         self.canvas = tk.Canvas(self)
         self.canvas.pack(fill=tk.BOTH, expand=True)
@@ -112,9 +118,9 @@ class ShematicViewver(tk.Frame):
             if isinstance(self.currentSelection, GraphicalNet):
                 if event.state & 0x4:
                     # If Crt down
-                    waveController = WaveController(self, self.currentSelection)
+                    self.waveControllers.add(WaveController(self, self.currentSelection))
                 else:
-                    waveViewver = WaveViewver(self, self.currentSelection)
+                    self.waveViewvers.add(WaveViewver(self, self.currentSelection))
         
     def mouseRigthDown(self, event):
         """Mouse Rigth click down"""
@@ -194,7 +200,8 @@ class ShematicViewver(tk.Frame):
                 # the component already exist
                 self.gitem[gid].updateFromSave(save['components'][gid])
             else:
-                self.add(Component.initFromSave(save['components'][gid]))
+                print("[NOT IMPLEMENTED]")
+                #self.add(Component.initFromSave(save['components'][gid]))
 
     def loadNetlistFromPath(self, netistPath, templatePath):
         """Load a netlist from a path"""
@@ -210,3 +217,49 @@ class ShematicViewver(tk.Frame):
         for net in netdic:
             self.add(GraphicalNet(net, [self.gitem[gid] for gid in netdic[net]]))
         
+    def refreshMonitors(self):
+        """Refresh all the monitors"""
+        for monitor in self.waveViewvers:
+            monitor.refreshWave()
+        for monitor in self.waveControllers:
+            monitor.refreshWave()
+
+    def forcedInput(self, fnet, value):
+        """Force one imput of the simulation to be changed"""
+        if (self.lastForcedNet != fnet):
+            self.resetForcedTrace()
+        self.lastForcedNet = fnet
+        if (value not in self.forcedXtrace):
+            netlist.forcedImage(fnet, value)
+            self.forcedXtrace.append(value)
+            self.lastForcedIdx = -1
+            for e in netlist.computedNet:
+                self.traces[str(e)].append(netlist.computedNet[e])
+        else:
+            self.lastForcedIdx = self.forcedXtrace.index(value)
+        self.refreshMonitors()
+
+    def getForcedTraceName(self):
+        return self.lastForcedNet
+
+    def getForcedXTrace(self):
+        return self.forcedXtrace
+    
+    def getForcedYTrace(self):
+        return self.forcedXtrace
+    
+    def getLastForcedIdx(self):
+        return self.lastForcedIdx
+    
+    def resetForcedTrace(self):
+        self.forcedXtrace = []
+        self.traces = {str(e):[] for e in netlist.getAllNets()}
+        self.lastForcedIdx = 0
+
+    def closeViewver(self, wv):
+        """Close a wave viewver"""
+        self.waveViewvers.remove(wv)
+
+    def closeController(self, wc):
+        """Close a wave controller"""
+        self.waveControllers.remove(wc)

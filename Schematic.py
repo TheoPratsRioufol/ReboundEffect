@@ -29,13 +29,13 @@ netlist.add(Block("Benefits", substractor, [Net.sales, Net.prodCost], [Net.benef
 netlist.add(Block("Social well being", socialWellBeing, [Net.x], [Net.socialWellBeing]))
 
 
-netlist.add(Constant("State", Net.law, law_i))
-netlist.add(Constant("Design", Net.x, x_i))
-netlist.add(Constant("Price", Net.price, p0))
+netlist.add(Constant(str(Net.law), Net.law, law_i))
+netlist.add(Constant(str(Net.x), Net.x, x_i))
+netlist.add(Constant(str(Net.price), Net.price, p0))
 
 #netlist.add(OverrideNet(SweepBetween("Price", Net.price, p0, p0))) # Overrride signals
 #netlist.add(OverrideNet(SweepBetween("Design", Net.x, [45, 300, 485], [45, 75, 600])))
-netlist.add(OverrideNet(SweepBetween("0", Net.efficiency, 0.5*eff_i, 1.5*eff_i)))
+#netlist.add(OverrideNet(SweepBetween("0", Net.efficiency, 0.5*eff_i, 1.5*eff_i)))
 
 with open('netlist.txt', 'w') as f:
     f.write(netlist.serialize())

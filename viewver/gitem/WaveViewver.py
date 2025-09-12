@@ -22,6 +22,7 @@ class WaveViewver(tk.Toplevel):
         net: the net contromonitored"""
         self.wm_title("Waveform")
         self.geometry("400x400")
+        self.protocol("WM_DELETE_WINDOW", self.kill)
 
         self.schematicViewver = schematicViewver
         self.monitoredNet = net
@@ -46,5 +47,20 @@ class WaveViewver(tk.Toplevel):
         netname = self.monitoredNet.getName()
         self.ax.cla()
         self.ax.set_title(netname)
-        self.ax.plot(traces[netname]['x'], traces[netname]['y'])
+        xs = self.schematicViewver.getForcedXTrace()
+        ys = self.schematicViewver.getForcedYTrace()
+        if len(xs) > 0:
+            self.ax.plot(xs, ys, 'k.')
+            self.ax.plot(xs[self.schematicViewver.getLastForcedIdx()], 
+                         ys[self.schematicViewver.getLastForcedIdx()], 'ro')
+        self.ax.set_xlabel(self.schematicViewver.getForcedTraceName())
         self.canvas.draw()
+
+    def refreshWave(self):
+        """Refresh the wave value"""
+        self.updateGraph()
+
+    def kill(self):
+        self.schematicViewver.closeViewver(self)
+        self.destroy()
+        print("killed")
