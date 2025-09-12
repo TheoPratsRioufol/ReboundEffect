@@ -223,25 +223,35 @@ class ShematicViewver(tk.Frame):
         for monitor in self.waveViewvers:
             monitor.refreshWave()
         for monitor in self.waveControllers:
-            monitor.refreshWave()
-
-    def forcedInput(self, fnet, value):
+            if monitor.getControlledNetName() != self.lastForcedNet:
+                monitor.refreshWave()
+                
+    def forcedInput(self, fnet, value, forcedValue=None, label=None):
         """Force one imput of the simulation to be changed"""
-        if (self.lastForcedNet != fnet):
+        print(label)
+        if (self.lastForcedNet != fnet) or ((label != None) and (label != self.forcedTraceLabel)):
             self.resetForcedTrace()
+            if label != None:
+                self.forcedTraceLabel = label
+            else:
+                self.forcedTraceLabel = fnet
         self.lastForcedNet = fnet
-        if (value not in self.forcedXtrace):
+
+        if forcedValue == None:
+            forcedValue = value
+
+        if (forcedValue not in self.forcedXtrace):
             netlist.forcedImage(Net.getNetFromName(fnet), value)
-            self.forcedXtrace.append(value)
+            self.forcedXtrace.append(forcedValue)
             self.lastForcedIdx = -1
             for e in netlist.computedNet:
                 self.traces[str(e)].append(netlist.computedNet[e])
         else:
-            self.lastForcedIdx = self.forcedXtrace.index(value)
+            self.lastForcedIdx = self.forcedXtrace.index(forcedValue)
         self.refreshMonitors()
         
-    def getForcedTraceName(self):
-        return self.lastForcedNet
+    def getForcedTraceLabel(self):
+        return self.forcedTraceLabel
 
     def getForcedXTrace(self):
         return self.forcedXtrace
@@ -256,6 +266,7 @@ class ShematicViewver(tk.Frame):
         self.forcedXtrace = []
         self.traces = {str(e):[] for e in netlist.getAllNets()}
         self.lastForcedIdx = 0
+        self.forcedTraceLabel = ""
 
     def closeViewver(self, wv):
         """Close a wave viewver"""

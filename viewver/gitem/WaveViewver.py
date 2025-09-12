@@ -63,7 +63,7 @@ class WaveViewver(tk.Toplevel):
                 self.ax.plot(xs[self.schematicViewver.getLastForcedIdx()], 
                             ys[self.schematicViewver.getLastForcedIdx()], 'ro')
             
-        self.ax.set_xlabel(self.schematicViewver.getForcedTraceName())
+        self.ax.set_xlabel(self.schematicViewver.getForcedTraceLabel())
         self.canvas.draw()
 
     def refreshWave(self):

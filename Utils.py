@@ -180,6 +180,11 @@ class Netlist():
 
     def forcedImage(self, fnet, netv):
         """Compute the net value while forcing the value of fnet"""
+        # save the value if possible (voltage source)
+        for c in self.content:
+            if isinstance(c, Constant) and c.getNet() == fnet:
+                c.setValue(netv)
+                
         self.image(0, forcedNets={fnet:netv})
 
     def image(self, t, forcedNets={}):
