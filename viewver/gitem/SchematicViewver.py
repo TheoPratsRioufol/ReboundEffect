@@ -228,7 +228,6 @@ class ShematicViewver(tk.Frame):
                 
     def forcedInput(self, fnet, value, forcedValue=None, label=None):
         """Force one imput of the simulation to be changed"""
-        print(label)
         if (self.lastForcedNet != fnet) or ((label != None) and (label != self.forcedTraceLabel)):
             self.resetForcedTrace()
             if label != None:

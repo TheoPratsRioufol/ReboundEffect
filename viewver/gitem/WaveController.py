@@ -73,14 +73,13 @@ class WaveController(tk.Toplevel):
             tk.Label(scaleFrame, textvariable=self.vartitle[i]).pack(fill=tk.X)
             # Add min, max entry
             tk.Entry(scaleFrame, textvariable=self.min[i], width=8).pack(side=tk.LEFT, fill=tk.X)
-            ttk.Scale(scaleFrame, orient=tk.HORIZONTAL, from_=0, to=1, variable=self.scaleVar[i]).pack(side=tk.LEFT, fill=tk.X, expand=True)
+            ttk.Scale(scaleFrame, orient=tk.HORIZONTAL, from_=0, to=1, variable=self.scaleVar[i], command=lambda v, idx=i: self.valueChanged(idx)).pack(side=tk.LEFT, fill=tk.X, expand=True)
             tk.Entry(scaleFrame, textvariable=self.max[i], width=8).pack(side=tk.LEFT, fill=tk.X)
             scaleFrame.pack(fill=tk.X, expand=True)
-            self.scaleVar[i].trace_add("write", lambda a,b,c,idx=i: self.valueChanged(idx))
-        
+            
         self.setValue(value_i)
 
-        self.wm_title(f"Controller of >>{self.netname}<<")
+        self.wm_title(f">>{self.netname}<< Controller")
 
 
     def sliderToValue(self, index):
@@ -90,7 +89,6 @@ class WaveController(tk.Toplevel):
         return alpha*(max - min) + min
     
     def valueToSlider(self, index, value):
-        print("Forcing comp",index,"to",value)
         min = varToFloat(self.min[index])
         max = varToFloat(self.max[index])
         if (value < min):
@@ -102,7 +100,7 @@ class WaveController(tk.Toplevel):
         # min < value < max
         alpha = (value - min)/(max - min)
         alpha = np.clip(alpha, 0, 1)
-        #self.scaleVar[index].set(alpha)
+        self.scaleVar[index].set(alpha)
 
     def readValueFromGUI(self):
         if self.dim == 1:
@@ -133,7 +131,6 @@ class WaveController(tk.Toplevel):
 
     def refreshWave(self):
         """Refresh the wave value"""
-        print("refreshing", self.netname)
         self.setValue(self.getNetValue(), forceSlider=True)
 
     def getNetValue(self):
@@ -152,7 +149,6 @@ class WaveController(tk.Toplevel):
     def kill(self):
         self.schematicViewver.closeController(self)
         self.destroy()
-        print("killed")
 
     def getControlledNetName(self):
         return self.netname
