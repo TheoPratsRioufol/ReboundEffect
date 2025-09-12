@@ -53,10 +53,6 @@ class ShematicViewver(tk.Frame):
         self.currentSelection = None
         self.idcounter = 0
 
-        # To inspect signals
-        self.waveViewvers = set()
-        self.waveControllers = set()
-
         self.canvas = tk.Canvas(self)
         self.canvas.pack(fill=tk.BOTH, expand=True)
 
@@ -116,13 +112,9 @@ class ShematicViewver(tk.Frame):
             if isinstance(self.currentSelection, GraphicalNet):
                 if event.state & 0x4:
                     # If Crt down
-                    waveController = WaveController(self)
-                    waveController.setSelection(self.currentSelection)
-                    self.waveControllers.add(waveController)
+                    waveController = WaveController(self, self.currentSelection)
                 else:
-                    waveViewver = WaveViewver(self)
-                    waveViewver.setSelection(self.currentSelection)
-                    self.waveViewvers.add(waveViewver)
+                    waveViewver = WaveViewver(self, self.currentSelection)
         
     def mouseRigthDown(self, event):
         """Mouse Rigth click down"""

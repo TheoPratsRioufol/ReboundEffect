@@ -16,16 +16,16 @@ from viewver.gitem.GraphicalItem import *
 from Schematic import *
 
 class WaveViewver(tk.Toplevel):
-    def __init__(self, schematicViewver):
+    def __init__(self, schematicViewver, net):
         super().__init__()
+        """Create a wave controller object.
+        net: the net contromonitored"""
         self.wm_title("Waveform")
         self.geometry("400x400")
 
         self.schematicViewver = schematicViewver
+        self.monitoredNet = net
         self.name = tk.StringVar()
-        self.visible = True
-
-        #tk.Label(self, textvariable=self.name).pack()
 
         fig = Figure(figsize = (5, 5), dpi = 100)
         self.ax = fig.add_subplot(111)
@@ -39,28 +39,12 @@ class WaveViewver(tk.Toplevel):
 
         self.canvas.get_tk_widget().pack(fill=tk.X)
 
+        self.updateGraph()
+
     def updateGraph(self):
         """Update the plotted graph"""
+        netname = self.monitoredNet.getName()
+        self.ax.cla()
+        self.ax.set_title(netname)
+        self.ax.plot(traces[netname]['x'], traces[netname]['y'])
         self.canvas.draw()
-
-    def show(self):
-        """Display the window at a specific coordinate"""
-        self.deiconify()
-        self.visible = True
-
-    def hide(self):
-        """Hide the window"""
-        self.withdraw()
-        self.visible = False
-
-    def setSelection(self, c):
-        """Set the currently selected item"""
-        if isinstance(c, GraphicalNet):
-            netname = c.getName()
-            if netname in traces:
-                # plot
-                self.ax.cla()
-                self.ax.set_title(netname)
-                self.ax.plot(traces[netname]['x'], traces[netname]['y'])
-        
-        self.updateGraph()

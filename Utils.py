@@ -157,6 +157,10 @@ class Netlist():
 
     def __init__(self):
         self.content = []
+        self.xTrace = np.linspace(0,1)
+
+    def setRunInterval(self, xTrace):
+        self.xTrace = xTrace
 
     def add(self, c):
         """Add a component to the netlist"""
@@ -218,7 +222,7 @@ class Netlist():
 
     def getXtrace(self):
         """Return the time trace of the simulation"""
-        return np.linspace(0, 1)
+        return self.xTrace
 
     def getAllNets(self):
         """Return a set of all the net of the circuit"""

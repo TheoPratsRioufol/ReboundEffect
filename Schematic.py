@@ -43,6 +43,7 @@ with open('netlist.txt', 'w') as f:
 with open('blockTemplate.txt', 'w') as f:
     f.write(netlist.generateTemplate())
 
+netlist.setRunInterval([0])
 netlist.run()
 
 traces = {str(net):{'x':netlist.getXtrace(),
