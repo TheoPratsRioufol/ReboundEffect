@@ -239,7 +239,7 @@ class ShematicViewver(tk.Frame):
         else:
             self.lastForcedIdx = self.forcedXtrace.index(value)
         self.refreshMonitors()
-
+        
     def getForcedTraceName(self):
         return self.lastForcedNet
 

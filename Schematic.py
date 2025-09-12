@@ -34,14 +34,15 @@ netlist.add(Constant(str(Net.x), Net.x, x_i))
 netlist.add(Constant(str(Net.price), Net.price, p0))"""
 
 def fa(x):
-    return [x]
+    return [x, np.array([x**2, x])]
 
 def fb(x):
     return [x**2]
 
 netlist.add(Constant(str(Net.x), Net.x, 1))
-netlist.add(Block("A", fa, [Net.x], [Net.law]))
+netlist.add(Block("A", fa, [Net.x], [Net.law, Net.budget]))
 netlist.add(Block("B", fb, [Net.law], [Net.Q]))
+netlist.add(Block("C", fb, [Net.budget], [Net.itot]))
 
 with open('netlist.txt', 'w') as f:
     f.write(netlist.serialize())

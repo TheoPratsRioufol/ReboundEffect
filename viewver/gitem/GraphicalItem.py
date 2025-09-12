@@ -128,7 +128,7 @@ class Component(GraphicalItem):
             
         for i in range(len(self.outputNets)):
             ylabel = (self.h/(len(self.outputNets)+1))*(i+1)
-            if (name == name):
+            if (name == self.outputNets[i]):
                 return self.x + self.w, self.y+ylabel
         return None
     

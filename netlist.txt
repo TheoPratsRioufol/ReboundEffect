@@ -1,3 +1,4 @@
 Net.x (Net.x) vsource dc=1
-A (Net.x Net.law) A
+A (Net.x Net.law Net.budget) A
 B (Net.law Net.Q) B
+C (Net.budget Net.itot) C
