@@ -180,12 +180,9 @@ class Netlist():
 
     def forcedImage(self, fnet, netv):
         """Compute the net value while forcing the value of fnet"""
-        for c in self.content:
-            if isinstance(c, Constant) and c.getName() == fnet:
-                c.setValue(netv)
-        self.image(0)
+        self.image(0, forcedNets={fnet:netv})
 
-    def image(self, t):
+    def image(self, t, forcedNets={}):
         """Run the simulation at time t"""
 
         """
@@ -202,6 +199,13 @@ class Netlist():
                 overridedNet.add(c.getC().getNet())
             else:
                 toCompute.add(c)
+
+        """
+        Forced net: dictionary netname:value of imposed values
+        """
+        for e in forcedNets:
+            computedNet[e] = forcedNets[e]
+            overridedNet.add(e)
         
         computedBlock = None
         while (len(toCompute) > 0):

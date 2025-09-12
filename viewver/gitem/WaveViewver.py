@@ -48,7 +48,7 @@ class WaveViewver(tk.Toplevel):
         self.ax.cla()
         self.ax.set_title(netname)
         xs = self.schematicViewver.getForcedXTrace()
-        ys = self.schematicViewver.getForcedYTrace()
+        ys = self.schematicViewver.getForcedYTrace()[netname]
         if len(xs) > 0:
             self.ax.plot(xs, ys, 'k.')
             self.ax.plot(xs[self.schematicViewver.getLastForcedIdx()], 

@@ -9,7 +9,7 @@ netlist = Netlist()
 
 # Constante x0, d0?
 
-netlist.add(Block("Voiture", car, [Net.x], [Net.efficiency]))
+"""netlist.add(Block("Voiture", car, [Net.x], [Net.efficiency]))
 netlist.add(Block("Comportement Routier", userDrivingModel, [Net.law, Net.efficiency], [Net.distance]))
 netlist.add(Block("Comportement Achats", userBuyingModel, [Net.law, Net.efficiency, Net.price], [Net.Q, Net.people]))
 
@@ -31,11 +31,17 @@ netlist.add(Block("Social well being", socialWellBeing, [Net.x], [Net.socialWell
 
 netlist.add(Constant(str(Net.law), Net.law, law_i))
 netlist.add(Constant(str(Net.x), Net.x, x_i))
-netlist.add(Constant(str(Net.price), Net.price, p0))
+netlist.add(Constant(str(Net.price), Net.price, p0))"""
 
-#netlist.add(OverrideNet(SweepBetween("Price", Net.price, p0, p0))) # Overrride signals
-#netlist.add(OverrideNet(SweepBetween("Design", Net.x, [45, 300, 485], [45, 75, 600])))
-#netlist.add(OverrideNet(SweepBetween("0", Net.efficiency, 0.5*eff_i, 1.5*eff_i)))
+def fa(x):
+    return [x]
+
+def fb(x):
+    return [x**2]
+
+netlist.add(Constant(str(Net.x), Net.x, 1))
+netlist.add(Block("A", fa, [Net.x], [Net.law]))
+netlist.add(Block("B", fb, [Net.law], [Net.Q]))
 
 with open('netlist.txt', 'w') as f:
     f.write(netlist.serialize())
@@ -45,14 +51,5 @@ with open('blockTemplate.txt', 'w') as f:
 
 netlist.setRunInterval([0])
 netlist.run()
-
 traces = {str(net):{'x':netlist.getXtrace(),
                     'y':netlist.get(net)} for net in netlist.getAllNets()}
-
-"""def plotn(net1, net2):
-    plt.plot(netlist.get(net1), netlist.get(net2), label=net2.value)
-
-plotn(Net.t, Net.distance)
-
-plt.legend()
-plt.show()"""

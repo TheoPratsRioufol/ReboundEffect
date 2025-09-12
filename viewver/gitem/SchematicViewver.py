@@ -202,6 +202,7 @@ class ShematicViewver(tk.Frame):
             else:
                 print("[NOT IMPLEMENTED]")
                 #self.add(Component.initFromSave(save['components'][gid]))
+        self.autoCenter()
 
     def loadNetlistFromPath(self, netistPath, templatePath):
         """Load a netlist from a path"""
@@ -230,7 +231,7 @@ class ShematicViewver(tk.Frame):
             self.resetForcedTrace()
         self.lastForcedNet = fnet
         if (value not in self.forcedXtrace):
-            netlist.forcedImage(fnet, value)
+            netlist.forcedImage(Net.getNetFromName(fnet), value)
             self.forcedXtrace.append(value)
             self.lastForcedIdx = -1
             for e in netlist.computedNet:
@@ -246,7 +247,7 @@ class ShematicViewver(tk.Frame):
         return self.forcedXtrace
     
     def getForcedYTrace(self):
-        return self.forcedXtrace
+        return self.traces
     
     def getLastForcedIdx(self):
         return self.lastForcedIdx
@@ -263,3 +264,16 @@ class ShematicViewver(tk.Frame):
     def closeController(self, wc):
         """Close a wave controller"""
         self.waveControllers.remove(wc)
+
+    def autoCenter(self):
+        """Auto center on the schematic"""
+        sum = np.zeros(2)
+        n = 0
+        for gid in self.gitem:
+            c = self.gitem[gid]
+            if isinstance(c, Component):
+                sum += np.array(c.getPos())
+                n += 1
+        if n == 0:
+            return
+        self.camera.x, self.camera.y = -sum/n + np.array(self.camera.inverse2D(*WINDOW_SIZE))/2

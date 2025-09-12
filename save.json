@@ -1,124 +1,26 @@
 {
     "schematicViewver": {
         "components": {
-            "Voiture": {
-                "pos": [
-                    -679.5103223390691,
-                    552.5566888579398
-                ],
-                "name": "Voiture"
-            },
-            "Comportement_Routier": {
-                "pos": [
-                    -228.8363617829532,
-                    450.11783841981804
-                ],
-                "name": "Comportement_Routier"
-            },
-            "Comportement_Achats": {
-                "pos": [
-                    -207.03205602849107,
-                    615.4755869089176
-                ],
-                "name": "Comportement_Achats"
-            },
-            "Usage_cost": {
-                "pos": [
-                    -204.44780839517688,
-                    179.08287625573672
-                ],
-                "name": "Usage_cost"
-            },
-            "Owner_cost": {
-                "pos": [
-                    -164.56353172107254,
-                    278.81306765166465
-                ],
-                "name": "Owner_cost"
-            },
-            "Direct_Impact": {
-                "pos": [
-                    -240.5335118170957,
-                    22.097819602041838
-                ],
-                "name": "Direct_Impact"
-            },
-            "Spending_model": {
-                "pos": [
-                    142.15678286247885,
-                    278.08226415581487
-                ],
-                "name": "Spending_model"
-            },
-            "Spendings": {
-                "pos": [
-                    77.89060884572166,
-                    496.23440481175845
-                ],
-                "name": "Spendings"
-            },
-            "Indirect_Impact": {
-                "pos": [
-                    418.24328927121775,
-                    456.5130751852194
-                ],
-                "name": "Indirect_Impact"
-            },
-            "Total_impacts": {
-                "pos": [
-                    1.3464332002683932,
-                    21.451311419972228
-                ],
-                "name": "Total_impacts"
-            },
-            "Production_cost": {
-                "pos": [
-                    510.4775687542191,
-                    619.4381083988782
-                ],
-                "name": "Production_cost"
-            },
-            "C.A": {
-                "pos": [
-                    316.9752192381724,
-                    139.40369595935175
-                ],
-                "name": "C.A"
-            },
-            "Benefits": {
-                "pos": [
-                    690.3086005686444,
-                    211.51621295592588
-                ],
-                "name": "Benefits"
-            },
-            "Social_well_being": {
-                "pos": [
-                    496.9152398206266,
-                    333.1815977857566
-                ],
-                "name": "Social_well_being"
-            },
-            "Net.law": {
-                "pos": [
-                    197.56125513462936,
-                    -100.90494213865476
-                ],
-                "name": "Net.law"
-            },
             "Net.x": {
                 "pos": [
-                    33.98903314144161,
-                    -161.44790742184762
+                    -127.01096685855839,
+                    -159.44790742184762
                 ],
                 "name": "Net.x"
             },
-            "Net.price": {
+            "A": {
                 "pos": [
-                    -155.0749637078273,
-                    -106.215728567005
+                    35.0,
+                    -158.0
                 ],
-                "name": "Net.price"
+                "name": "A"
+            },
+            "B": {
+                "pos": [
+                    261.0,
+                    -156.0
+                ],
+                "name": "B"
             }
         },
         "idcounter": 18

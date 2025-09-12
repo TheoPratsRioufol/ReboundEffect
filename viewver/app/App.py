@@ -18,7 +18,7 @@ class App(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Netlist Viewver")
-        self.geometry(f"600x600+{800}+{50}")
+        self.geometry(f"{WINDOW_SIZE[0]}x{WINDOW_SIZE[1]}+{800}+{50}")
         self.mainPane = tk.Frame(self)
         self.mainPane.pack(fill=tk.BOTH, expand=True)
         self.buildMenu()
