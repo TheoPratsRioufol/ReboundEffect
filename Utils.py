@@ -19,7 +19,10 @@ class Block():
         self.fct = fct
 
     def compute(self, inputs):
-        return self.fct(*inputs)
+        try:
+            return self.fct(*inputs)
+        except:
+            raise Exception(f"Failed to compute the block '{self.name}'")
 
     def getInputs(self):
         """Return the inputs"""
@@ -242,7 +245,12 @@ class Netlist():
 
     def get(self, net):
         """Return a net value"""
-        return self.computedNetOnInterval[net]
+        try:
+            return self.computedNetOnInterval[net]
+        except Exception as e:
+            for i in self.computedNetOnInterval:
+                print(i)
+            raise Exception(e)
     
     def getInstantanedNetValue(self, net):
         """Return instantenous net value"""

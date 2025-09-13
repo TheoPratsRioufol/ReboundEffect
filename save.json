@@ -3,87 +3,283 @@
         "components": {
             "Balance_March\u00e9": {
                 "pos": [
-                    -932.091279894995,
-                    -25.33331501120415
+                    -596.9693804442202,
+                    -66.94810927679384
                 ],
                 "name": "Balance_March\u00e9"
             },
             "Choix_Techniques": {
                 "pos": [
-                    -901.2841217248996,
-                    -218.41157999074966
+                    -1091.4426993809873,
+                    -251.85094799352072
                 ],
                 "name": "Choix_Techniques"
             },
             "Prix": {
                 "pos": [
-                    -575.5403161139027,
-                    -295.06549352381893
+                    -1107.9767455097478,
+                    -509.5247848858928
                 ],
                 "name": "Prix"
             },
             "Politique_publique": {
                 "pos": [
-                    -758.5122182012884,
-                    -126.98926812168415
+                    -1123.8128583335056,
+                    -393.4048003629299
                 ],
                 "name": "Politique_publique"
             },
             "Pop.Vis\u00e9e": {
                 "pos": [
-                    -785.5926583856791,
-                    -24.335720103646167
+                    -461.83648433267854,
+                    -65.71558880447753
                 ],
                 "name": "Pop.Vis\u00e9e"
             },
             "Mod\u00e8le_d'ing\u00e9n\u00e9rie": {
                 "pos": [
-                    -751.6933851205605,
-                    -212.61933495026028
+                    -942.6084297388611,
+                    -246.29362851778956
                 ],
                 "name": "Mod\u00e8le_d'ing\u00e9n\u00e9rie"
             },
-            "M\u00e9nage": {
-                "pos": [
-                    -568.947812598885,
-                    -172.26552026611
-                ],
-                "name": "M\u00e9nage"
-            },
             "B\u00e9n\u00e9fice_economique": {
                 "pos": [
-                    -255.53730747051412,
-                    -312.3530292745331
+                    -398.9690574223398,
+                    -778.1033184439452
                 ],
                 "name": "B\u00e9n\u00e9fice_economique"
             },
             "Impact_de_la_voiture": {
                 "pos": [
-                    -209.05584043701185,
-                    -190.2539939332677
+                    769.1809260883623,
+                    -855.8417774175829
                 ],
                 "name": "Impact_de_la_voiture"
             },
             "Impact_des_autres_transports": {
                 "pos": [
-                    -206.36781293296633,
-                    -79.51719399449351
+                    770.2573608963196,
+                    -746.7165701748967
                 ],
                 "name": "Impact_des_autres_transports"
             },
             "Impact_redirection_des_d\u00e9penses": {
                 "pos": [
-                    -214.39075658108686,
-                    19.78151316217361
+                    961.0497440761642,
+                    -621.4066503325109
                 ],
                 "name": "Impact_redirection_des_d\u00e9penses"
             },
             "Somme": {
                 "pos": [
-                    62.73562586593232,
-                    -104.0
+                    1101.5844129744987,
+                    -779.4202314400608
                 ],
                 "name": "Somme"
+            },
+            "Besoins_Urbain": {
+                "pos": [
+                    -763.2235466237313,
+                    -500.6243855901747
+                ],
+                "name": "Besoins_Urbain"
+            },
+            "Besoins_Rural": {
+                "pos": [
+                    -767.3932714753864,
+                    -319.4558799234467
+                ],
+                "name": "Besoins_Rural"
+            },
+            "PA_Urbain": {
+                "pos": [
+                    -767.7423890198129,
+                    -429.94106184277996
+                ],
+                "name": "PA_Urbain"
+            },
+            "PA_Rural": {
+                "pos": [
+                    -768.4634412158858,
+                    -251.23390181750398
+                ],
+                "name": "PA_Rural"
+            },
+            "Prix_efficace": {
+                "pos": [
+                    -960.6551023739055,
+                    -463.67852009862816
+                ],
+                "name": "Prix_efficace"
+            },
+            "Satisfaction_Urbaine": {
+                "pos": [
+                    -535.1595054030539,
+                    -451.3771908880473
+                ],
+                "name": "Satisfaction_Urbaine"
+            },
+            "Satisfaction_Rurale": {
+                "pos": [
+                    -525.8925304962812,
+                    -275.3034000423011
+                ],
+                "name": "Satisfaction_Rurale"
+            },
+            "Ventes_Rurale": {
+                "pos": [
+                    -54.58387580839701,
+                    -259.5467315623905
+                ],
+                "name": "Ventes_Rurale"
+            },
+            "Ventes_Urbaine": {
+                "pos": [
+                    -54.56866440358351,
+                    -474.19942536599643
+                ],
+                "name": "Ventes_Urbaine"
+            },
+            "Distance_Rurale": {
+                "pos": [
+                    326.4130270452789,
+                    -25.774074583796846
+                ],
+                "name": "Distance_Rurale"
+            },
+            "Distance_Urbaine": {
+                "pos": [
+                    311.3302851214514,
+                    -598.4843683759294
+                ],
+                "name": "Distance_Urbaine"
+            },
+            "BE_rural": {
+                "pos": [
+                    320.4622211935939,
+                    -124.99838950359907
+                ],
+                "name": "BE_rural"
+            },
+            "BE_urbain": {
+                "pos": [
+                    312.4501157360763,
+                    -479.05195009320926
+                ],
+                "name": "BE_urbain"
+            },
+            "BE_pond\u00e9r\u00e9": {
+                "pos": [
+                    565.0320944742275,
+                    -463.7845084606264
+                ],
+                "name": "BE_pond\u00e9r\u00e9"
+            },
+            "Co\u00fbt_rural": {
+                "pos": [
+                    314.49620393709483,
+                    83.3034524127022
+                ],
+                "name": "Co\u00fbt_rural"
+            },
+            "Co\u00fbt_urbain": {
+                "pos": [
+                    310.5010378576533,
+                    -718.3740992708008
+                ],
+                "name": "Co\u00fbt_urbain"
+            },
+            "Co\u00fbt_voiture_Pond\u00e9r\u00e9": {
+                "pos": [
+                    552.3775163396084,
+                    -145.9478269356743
+                ],
+                "name": "Co\u00fbt_voiture_Pond\u00e9r\u00e9"
+            },
+            "Co\u00fbt_Report_Modal_Rural": {
+                "pos": [
+                    -51.89070481819954,
+                    -170.8364314877274
+                ],
+                "name": "Co\u00fbt_Report_Modal_Rural"
+            },
+            "Co\u00fbt_Report_Modal_Urbain": {
+                "pos": [
+                    -55.971248858146396,
+                    -383.12076331279286
+                ],
+                "name": "Co\u00fbt_Report_Modal_Urbain"
+            },
+            "Distance_Report_Modal_Rural": {
+                "pos": [
+                    99.47411071597844,
+                    -12.23402641743354
+                ],
+                "name": "Distance_Report_Modal_Rural"
+            },
+            "Distance_Report_Modal_Urbain": {
+                "pos": [
+                    68.47430913625408,
+                    -651.543297065811
+                ],
+                "name": "Distance_Report_Modal_Urbain"
+            },
+            "Co\u00fbt_Report_Modal_Pond\u00e9r\u00e9": {
+                "pos": [
+                    319.1718584664403,
+                    -259.68937609942753
+                ],
+                "name": "Co\u00fbt_Report_Modal_Pond\u00e9r\u00e9"
+            },
+            "Distance_Report_Modal_Pond\u00e9r\u00e9": {
+                "pos": [
+                    324.77481439076723,
+                    -384.6687513470097
+                ],
+                "name": "Distance_Report_Modal_Pond\u00e9r\u00e9"
+            },
+            "$Transport": {
+                "pos": [
+                    538.7497787870863,
+                    -249.252909703905
+                ],
+                "name": "$Transport"
+            },
+            "Autre_d\u00e9penses": {
+                "pos": [
+                    732.9469938947793,
+                    -620.7925150502208
+                ],
+                "name": "Autre_d\u00e9penses"
+            },
+            "Ventes_totales": {
+                "pos": [
+                    -620.9625557777232,
+                    -776.4436324382273
+                ],
+                "name": "Ventes_totales"
+            },
+            "Distance_totales": {
+                "pos": [
+                    580.8153829125624,
+                    -349.67989796470124
+                ],
+                "name": "Distance_totales"
+            },
+            "Report_Modal_Rural": {
+                "pos": [
+                    -155.46459763862276,
+                    -64.47511639712724
+                ],
+                "name": "Report_Modal_Rural"
+            },
+            "Report_Modal_Urbain": {
+                "pos": [
+                    -185.40586183993912,
+                    -586.3560017920852
+                ],
+                "name": "Report_Modal_Urbain"
             }
         },
         "idcounter": 18
