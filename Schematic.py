@@ -39,12 +39,12 @@ def fa(x):
 def fb(x):
     return [x**2]
 
-netlist.add(Constant(str(Net.x), Net.x, 1))
-netlist.add(Block("A", fa, [Net.x], [Net.law, Net.budget]))
-netlist.add(Block("B", fb, [Net.law], [Net.Q]))
-netlist.add(Block("C", fb, [Net.budget], [Net.itot]))
+netlist.add(Constant("a", "a", 1))
+netlist.add(Block("A", fa, ["a"], ["a1", "a2"]))
+netlist.add(Block("B", fb, ["a1"], ["o1"]))
+netlist.add(Block("C", fb, ["a2"], ["o2"]))
 
-netlist.addLegend(Net.budget, ["budA", "budB"])
+netlist.addLegend("a2", ["budA", "budB"])
 
 with open('netlist.txt', 'w') as f:
     f.write(netlist.serialize())

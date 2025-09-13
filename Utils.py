@@ -1,33 +1,6 @@
 from enum import Enum
 import numpy as np
 
-class Net(Enum):
-    efficiency = 'eff'
-    x = 'x'
-    law = 'law'
-    distance = 'distance'
-    price = 'price'
-    people = 'people'
-    Q = 'Q'
-    useCost = 'use cost'
-    prodCost = 'production cost'
-    carCost = 'car cost'
-    sales = 'sales'
-    benefits = 'benefits'
-    lci = 'Life cycle impact'
-    spendings = 'Spendings'
-    spending = 'Spending / unit'
-    indi = 'Indirect impact'
-    itot = 'Total impacts'
-    budget = 'budget'
-    socialWellBeing = 'Social well being'
-    t = 't'
-
-    def getNetFromName(name):
-        for e in Net:
-            if str(e) == name:
-                return e
-        raise Exception(f"Not Net object found for {name}")
 
 def noSpace(txt):
     return txt.replace(' ', '_')
@@ -201,7 +174,7 @@ class Netlist():
         """
         Start from the constants. Check which leaf are now accesible. update and continue
         """
-        computedNet = {Net.t:t}
+        computedNet = {'t':t}
         overridedNet = set()
         toCompute = set()
         for c in self.content:
@@ -262,7 +235,7 @@ class Netlist():
 
     def getAllNets(self):
         """Return a set of all the net of the circuit"""
-        nets = set([Net.t])
+        nets = set(['t'])
         for c in self.content:
             nets.update(c.getAllNets())
         return nets

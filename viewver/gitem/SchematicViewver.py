@@ -240,7 +240,8 @@ class ShematicViewver(tk.Frame):
             forcedValue = value
 
         if (forcedValue not in self.forcedXtrace):
-            netlist.forcedImage(Net.getNetFromName(fnet), value)
+            #netlist.forcedImage(Net.getNetFromName(fnet), value)
+            netlist.forcedImage(fnet, value)
             self.forcedXtrace.append(forcedValue)
             self.lastForcedIdx = -1
             for e in netlist.computedNet:
@@ -290,7 +291,7 @@ class ShematicViewver(tk.Frame):
 
     def getComponentName(self, netname, index):
         """Return the component name for a net. If no name is specified in legend, return the index"""
-        net = Net.getNetFromName(netname)
-        if net not in netlist.getLegend() or len(netlist.legend[net]) <= index:
+        #net = Net.getNetFromName(netname)
+        if netname not in netlist.getLegend() or len(netlist.legend[netname]) <= index:
             return str(index)
-        return netlist.getLegend()[net][index]
+        return netlist.getLegend()[netname][index]
