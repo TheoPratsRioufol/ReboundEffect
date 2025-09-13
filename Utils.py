@@ -169,6 +169,7 @@ class Netlist():
 
     def __init__(self):
         self.content = []
+        self.legend = {}
         self.xTrace = np.linspace(0,1)
 
     def setRunInterval(self, xTrace):
@@ -177,6 +178,13 @@ class Netlist():
     def add(self, c):
         """Add a component to the netlist"""
         self.content.append(c)
+
+    def addLegend(self, net, legend):
+        """Add a legend of a net"""
+        self.legend[net] = legend
+
+    def getLegend(self):
+        return self.legend
 
     def forcedImage(self, fnet, netv):
         """Compute the net value while forcing the value of fnet"""

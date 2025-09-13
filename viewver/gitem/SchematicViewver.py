@@ -287,3 +287,10 @@ class ShematicViewver(tk.Frame):
         if n == 0:
             return
         self.camera.x, self.camera.y = -sum/n + np.array(self.camera.inverse2D(*WINDOW_SIZE))/2
+
+    def getComponentName(self, netname, index):
+        """Return the component name for a net. If no name is specified in legend, return the index"""
+        net = Net.getNetFromName(netname)
+        if net not in netlist.getLegend() or len(netlist.legend[net]) <= index:
+            return str(index)
+        return netlist.getLegend()[net][index]

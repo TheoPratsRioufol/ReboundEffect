@@ -118,14 +118,14 @@ class WaveController(tk.Toplevel):
         if self.dim == 1:
             self.schematicViewver.forcedInput(self.controlledNet.getName(), v)
         else:
-            self.schematicViewver.forcedInput(self.controlledNet.getName(), v, forcedValue=v[index], label=f'{self.netname}, comp. {index}')
+            self.schematicViewver.forcedInput(self.controlledNet.getName(), v, forcedValue=v[index], label=f'{self.netname}, comp. {self.schematicViewver.getComponentName(self.netname, index)}')
 
     def setValue(self, v, forceSlider=False):
         """Set the value of the controlled net"""
         if self.dim == 1:
             v = [v]
         for i in range(self.dim):
-            self.vartitle[i].set('Component {}, initial: {:.2f}, current: {:.2f}'.format(i, self.value_i[i], v[i]))
+            self.vartitle[i].set('Component {}, initial: {:.2f}, current: {:.2f}'.format(self.schematicViewver.getComponentName(self.netname, i), self.value_i[i], v[i]))
             if forceSlider:
                 self.valueToSlider(i, v[i])
 

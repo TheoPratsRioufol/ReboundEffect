@@ -44,6 +44,8 @@ netlist.add(Block("A", fa, [Net.x], [Net.law, Net.budget]))
 netlist.add(Block("B", fb, [Net.law], [Net.Q]))
 netlist.add(Block("C", fb, [Net.budget], [Net.itot]))
 
+netlist.addLegend(Net.budget, ["budA", "budB"])
+
 with open('netlist.txt', 'w') as f:
     f.write(netlist.serialize())
 

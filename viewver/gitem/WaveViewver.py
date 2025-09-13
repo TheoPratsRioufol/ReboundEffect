@@ -27,6 +27,7 @@ class WaveViewver(tk.Toplevel):
         self.schematicViewver = schematicViewver
         self.monitoredNet = net
         self.name = tk.StringVar()
+        self.netname = self.monitoredNet.getName()
 
         fig = Figure(figsize = (5, 5), dpi = 100)
         self.ax = fig.add_subplot(111)
@@ -44,16 +45,15 @@ class WaveViewver(tk.Toplevel):
 
     def updateGraph(self):
         """Update the plotted graph"""
-        netname = self.monitoredNet.getName()
         self.ax.cla()
-        self.ax.set_title(netname)
+        self.ax.set_title(self.netname)
         xs = self.schematicViewver.getForcedXTrace()
-        ys = self.schematicViewver.getForcedYTrace()[netname]
+        ys = self.schematicViewver.getForcedYTrace()[self.netname]
         if len(xs) > 0:
             if (isinstance(ys[0], list) or isinstance(ys[0], np.ndarray)):
                 # Vectorized output
                 for k in range(len(ys[0])):
-                    self.ax.plot(xs, [i[k] for i in ys], '.', label=f'{k}')
+                    self.ax.plot(xs, [i[k] for i in ys], '.', label=f'{self.schematicViewver.getComponentName(self.netname, k)}')
                     self.ax.plot(xs[self.schematicViewver.getLastForcedIdx()], 
                                 ys[self.schematicViewver.getLastForcedIdx()][k], 'ro')
                 self.ax.legend()
