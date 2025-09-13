@@ -261,3 +261,18 @@ class Netlist():
         for c in self.content:
             text += c.generateTemplate() + '\n'
         return text
+    
+
+
+def postProdNetlist(netlist):
+    with open('netlist.txt', 'w') as f:
+        f.write(netlist.serialize())
+
+    with open('blockTemplate.txt', 'w') as f:
+        f.write(netlist.generateTemplate())
+
+    netlist.setRunInterval([0])
+    netlist.run()
+    traces = {str(net):{'x':netlist.getXtrace(),
+                        'y':netlist.get(net)} for net in netlist.getAllNets()}
+    return traces

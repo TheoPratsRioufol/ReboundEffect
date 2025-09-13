@@ -1,17 +1,12 @@
-Voiture (x efficiency) Voiture
-Comportement_Routier (law efficiency distance) Comportement_Routier
-Comportement_Achats (law efficiency price Q people) Comportement_Achats
-Usage_cost (law efficiency distance useCost) Usage_cost
-Owner_cost (useCost price budget) Owner_cost
-Direct_Impact (x Q lci) Direct_Impact
-Spending_model (budget spending) Spending_model
-Spendings (spending people spendings) Spendings
-Indirect_Impact (spendings people indi) Indirect_Impact
-Total_impacts (indi lci itot) Total_impacts
-Production_cost (x law Q prodCost) Production_cost
-C.A (price Q sales) C.A
-Benefits (sales prodCost benefits) Benefits
-Social_well_being (x socialWellBeing) Social_well_being
-law (law) vsource dc=[0.1952, 0]
-x (x) vsource dc=[45, 75, 485]
-price (price) vsource dc=7990
+Balance_Marché (b) vsource dc=0.5
+Choix_Techniques (x) vsource dc=[45, 75, 485]
+Prix (p) vsource dc=990
+Politique_publique (loi) vsource dc=[0.14, 150]
+Pop.Visée (b alpha) Pop.Visée
+Modèle_d'ingénérie (x SR) Modèle_d'ingénérie
+Ménage (SR loi alpha p Q D Davg Dr $r $autre) Ménage
+Bénéfice_economique (Q p Davg $) Bénéfice_economique
+Impact_de_la_voiture (Q D Davg iv) Impact_de_la_voiture
+Impact_des_autres_transports ($r Dr iav) Impact_des_autres_transports
+Impact_redirection_des_dépenses ($autre ia) Impact_redirection_des_dépenses
+Somme (iv ia iav itot) Somme
