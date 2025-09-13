@@ -65,6 +65,27 @@ class GraphicalNet(GraphicalItem):
             self.pts.append(c.getNet2D(self.name))
             self.terminals.append(c.getNetTerminal4D(self.name))
 
+        # Find the order of self.pts to minimize the distance between 2
+        N = len(self.pts)
+        ptsDistances = np.zeros((N, N))
+        for i in range(N):
+            for j in range(N):
+                ptsDistances[i,j] = (self.pts[i][0] - self.pts[j][0])**2 + (self.pts[i][1] - self.pts[j][1])**2
+        
+        newPtsIdx = [0]
+        for loop in range(N-1):
+            lastIndex = newPtsIdx[-1]
+            dmin = None
+            imin = 0
+            for i in range(N):
+                if (i not in newPtsIdx) and ((dmin == None) or (ptsDistances[lastIndex,i] < dmin)):
+                    dmin = ptsDistances[lastIndex, i]
+                    imin = i
+            newPtsIdx.append(imin) # le plus proche pas déjà pris
+        self.pts = [self.pts[i] for i in newPtsIdx]
+
+
+
     def draw(self, canvas, camera):
         """Draw the item on the canvas"""
         self.updateLines()

@@ -27,7 +27,7 @@ class WaveController(tk.Toplevel):
         """Create a wave controller object.
         net: the net controlled"""
         super().__init__()
-        self.geometry("300x100")
+        self.geometry("300x200")
 
         self.dim = 1 # dimention
 
