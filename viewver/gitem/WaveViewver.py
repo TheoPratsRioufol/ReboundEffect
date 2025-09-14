@@ -23,6 +23,7 @@ class WaveViewver(tk.Toplevel):
         self.wm_title("Waveform")
         self.geometry("400x400")
         self.protocol("WM_DELETE_WINDOW", self.kill)
+        mainPane = tk.Frame(self)
 
         self.schematicViewver = schematicViewver
         self.monitoredNet = net
@@ -33,19 +34,21 @@ class WaveViewver(tk.Toplevel):
         self.ax = fig.add_subplot(111)
         self.ax.plot()
 
-        self.canvas = FigureCanvasTkAgg(fig, master=self)  
-        self.canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
+        self.canvas = FigureCanvasTkAgg(fig, master=mainPane)  
+        self.canvas.get_tk_widget().pack(fill=tk.X, expand=True)
 
-        toolbar = NavigationToolbar2Tk(self.canvas, self)
+        toolbar = NavigationToolbar2Tk(self.canvas, self, pack_toolbar=False)
         toolbar.update()
+        toolbar.pack(side=tk.TOP, fill=tk.X)
 
-        self.canvas.get_tk_widget().pack(fill=tk.X)
+        mainPane.pack(fill=tk.BOTH, expand=True)
 
         self.updateGraph()
 
     def updateGraph(self):
         """Update the plotted graph"""
         self.ax.cla()
+        self.ax.grid()
         self.ax.set_title(self.netname)
         xs = self.schematicViewver.getForcedXTrace()
         ys = self.schematicViewver.getForcedYTrace()[self.netname]

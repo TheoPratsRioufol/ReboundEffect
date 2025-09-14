@@ -25,6 +25,12 @@ netlist.addLegend("Brural", ["Prix de revient ($/km)", "km en ville", "km hors v
 netlist.addLegend("Srural", ["Prix de revient ($/km)", "km en ville", "km hors ville"])
 netlist.addLegend("Surbain", ["Prix de revient ($/km)", "km en ville", "km hors ville"])
 
+netlist.addLegend("Drrural", ["km en bus", "km en train"])
+netlist.addLegend("Drurbain", ["km en bus", "km en train"])
+
+netlist.addLegend("$rrural", ["$ en bus", "$ en train"])
+netlist.addLegend("$rurbain", ["$ en bus", "$ en train"])
+
 # add bounds
 netlist.addBounds("b", 0, 1)
 netlist.addBounds("x", [30, 0.3*autonomie_i, 0.5*mass_i], [140, 3*autonomie_i, 2*mass_i])
