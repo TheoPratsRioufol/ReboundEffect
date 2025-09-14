@@ -3,6 +3,7 @@ from tkinter import ttk
 import numpy as np
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
+import warnings
 
 import sys
 import pathlib
@@ -52,6 +53,7 @@ class WaveViewver(tk.Toplevel):
         self.ax.set_title(self.netname)
         xs = self.schematicViewver.getForcedXTrace()
         ys = self.schematicViewver.getForcedYTrace()[self.netname]
+        onlypos = True
         if len(xs) > 0:
             if (isinstance(ys[0], list) or isinstance(ys[0], np.ndarray)):
                 # Vectorized output
@@ -59,19 +61,24 @@ class WaveViewver(tk.Toplevel):
                     self.ax.plot(xs, [i[k] for i in ys], '.-', label=f'{self.schematicViewver.getComponentName(self.netname, k)}')
                     self.ax.plot(xs[self.schematicViewver.getLastForcedIdx()], 
                                 ys[self.schematicViewver.getLastForcedIdx()][k], 'ro')
+                    
+                    if onlypos:
+                        for u in ys[k]:
+                            if u < 0:
+                                onlypos = False
+                                break
                 self.ax.legend()
             else:
                 # Scalar output
                 self.ax.plot(xs, ys, '.-')
                 self.ax.plot(xs[self.schematicViewver.getLastForcedIdx()], 
                             ys[self.schematicViewver.getLastForcedIdx()], 'ro')
+                for u in ys:
+                    if u < 0:
+                        onlypos = False
+                        break
             
         self.ax.set_xlabel(self.schematicViewver.getForcedTraceLabel())
-        onlypos = True
-        for u in ys:
-            if u < 0:
-                onlypos = False
-                break
         if onlypos:
             self.ax.set_yscale('log')
 
