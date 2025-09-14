@@ -242,9 +242,13 @@ class ShematicViewver(tk.Frame):
         if (forcedValue not in self.forcedXtrace):
             netlist.forcedImage(fnet, value)
             self.forcedXtrace.append(forcedValue)
+            argsortIdx = np.argsort(self.forcedXtrace)
+            self.forcedXtrace = [self.forcedXtrace[i] for i in argsortIdx]
             self.lastForcedIdx = -1
             for e in netlist.computedNet:
                 self.traces[str(e)].append(netlist.computedNet[e])
+                # then args sort
+                self.traces[str(e)] = [self.traces[str(e)][i] for i in argsortIdx]
         else:
             self.lastForcedIdx = self.forcedXtrace.index(forcedValue)
         self.refreshMonitors()

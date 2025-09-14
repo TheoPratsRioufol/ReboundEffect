@@ -53,13 +53,13 @@ class WaveViewver(tk.Toplevel):
             if (isinstance(ys[0], list) or isinstance(ys[0], np.ndarray)):
                 # Vectorized output
                 for k in range(len(ys[0])):
-                    self.ax.plot(xs, [i[k] for i in ys], '.', label=f'{self.schematicViewver.getComponentName(self.netname, k)}')
+                    self.ax.plot(xs, [i[k] for i in ys], '.-', label=f'{self.schematicViewver.getComponentName(self.netname, k)}')
                     self.ax.plot(xs[self.schematicViewver.getLastForcedIdx()], 
                                 ys[self.schematicViewver.getLastForcedIdx()][k], 'ro')
                 self.ax.legend()
             else:
                 # Scalar output
-                self.ax.plot(xs, ys, '.')
+                self.ax.plot(xs, ys, '.-')
                 self.ax.plot(xs[self.schematicViewver.getLastForcedIdx()], 
                             ys[self.schematicViewver.getLastForcedIdx()], 'ro')
             

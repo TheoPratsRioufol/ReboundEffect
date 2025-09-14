@@ -75,6 +75,7 @@ class WaveController(tk.Toplevel):
             tk.Entry(scaleFrame, textvariable=self.min[i], width=8).pack(side=tk.LEFT, fill=tk.X)
             ttk.Scale(scaleFrame, orient=tk.HORIZONTAL, from_=0, to=1, variable=self.scaleVar[i], command=lambda v, idx=i: self.valueChanged(idx)).pack(side=tk.LEFT, fill=tk.X, expand=True)
             tk.Entry(scaleFrame, textvariable=self.max[i], width=8).pack(side=tk.LEFT, fill=tk.X)
+            tk.Button(scaleFrame, text="Sweep", command=lambda idx=i:self.sweep(idx)).pack(side=tk.LEFT, fill=tk.X)
             scaleFrame.pack(fill=tk.X, expand=True)
             
         self.setValue(value_i)
@@ -128,6 +129,14 @@ class WaveController(tk.Toplevel):
             self.vartitle[i].set('Component {}, initial: {:.2f}, current: {:.2f}'.format(self.schematicViewver.getComponentName(self.netname, i), self.value_i[i], v[i]))
             if forceSlider:
                 self.valueToSlider(i, v[i])
+
+    def sweep(self, index):
+        """Auto sweep a variable"""
+        print("SWEEP",index)
+        for i in range(NB_STEP_FORCED_VALUE):
+            val = i/(NB_STEP_FORCED_VALUE-1)
+            self.scaleVar[index].set(val)
+            self.valueChanged(index)
 
     def refreshWave(self):
         """Refresh the wave value"""
