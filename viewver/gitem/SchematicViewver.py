@@ -297,3 +297,18 @@ class ShematicViewver(tk.Frame):
         if netname not in netlist.getLegend() or len(netlist.legend[netname]) <= index:
             return str(index)
         return netlist.getLegend()[netname][index]
+    
+    def getNetMinMax(self, net, index, value):
+        """Return the available min max value for a net"""
+        if net in netlist.bounds:
+            min = netlist.bounds[net]['min']
+            max = netlist.bounds[net]['max']
+            if not (isinstance(min, np.ndarray) or isinstance(min, list)):
+                return [min, max]
+            else:
+                return [min[index], max[index]]
+        else:
+            if value == 0:
+                return [0, 1]
+            else:
+                return [value/5, value*5] 

@@ -25,6 +25,12 @@ netlist.addLegend("Brural", ["Prix de revient ($/km)", "km en ville", "km hors v
 netlist.addLegend("Srural", ["Prix de revient ($/km)", "km en ville", "km hors ville"])
 netlist.addLegend("Surbain", ["Prix de revient ($/km)", "km en ville", "km hors ville"])
 
+# add bounds
+netlist.addBounds("b", 0, 1)
+netlist.addBounds("x", [30, 0.3*autonomie_i, 0.5*mass_i], [140, 3*autonomie_i, 2*mass_i])
+netlist.addBounds("loi", [prixKwh*0.5, 0], [prixKwh*8, subvention_i*2])
+netlist.addBounds("p", p_i*0.5, p_i*2)
+
 PAurbain_i = 10000 # pouvoir achat urbain
 PArural_i = 9000 # rural
 

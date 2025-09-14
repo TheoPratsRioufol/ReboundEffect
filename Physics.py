@@ -41,7 +41,8 @@ vmax_optimal = 40
 mass_optimal = 400
 
 eff_i = 7.3/100 # rendement initial kW/km
-x_i = [45, 75*eff_i, 485] # design initial
+autonomie_i = 75*eff_i
+x_i = [45, autonomie_i, 485] # design initial
 
 p_i = 7990 # Initial price
 prodCost_i = 7990*0.5 # Initial production price
@@ -56,7 +57,9 @@ GESkmAutreMobilite = np.array([0.113, 0.016]) # Emission carbone par km des autr
 GESautreDepenseParEUR = 1000/250 # Emission GES par euro dépensé. Paris newYork Avion -> 1 Tonne Co2, ~250$
 
 """ Ménages """
-loi_i = [0.14, 150] # Prix energie, subvention voiture
+prixKwh = 0.14
+subvention_i = 150
+loi_i = [prixKwh, 150] # Prix energie, subvention voiture
 Pi_urbain = 8000# pop urbaine
 Pi_rural = 5000# pop rurale
 ptransport_i = 8000 # Prix initial mis dans les transport

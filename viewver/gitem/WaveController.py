@@ -62,12 +62,9 @@ class WaveController(tk.Toplevel):
 
             self.value_i.append(value)
             
-            if value != 0:
-                self.min[i].set('{:.2f}'.format(value*0.1))
-                self.max[i].set('{:.2f}'.format(value*10))
-            else:
-                self.min[i].set(0)
-                self.max[i].set(1)
+            minv, maxv = self.schematicViewver.getNetMinMax(self.netname, i, value)
+            self.min[i].set(minv)
+            self.max[i].set(maxv)
 
             scaleFrame = tk.Frame(self)
             tk.Label(scaleFrame, textvariable=self.vartitle[i]).pack(fill=tk.X)

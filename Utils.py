@@ -145,6 +145,7 @@ class Netlist():
 
     def __init__(self):
         self.content = []
+        self.bounds = {}
         self.legend = {}
         self.xTrace = np.linspace(0,1)
 
@@ -158,6 +159,10 @@ class Netlist():
     def addLegend(self, net, legend):
         """Add a legend of a net"""
         self.legend[net] = legend
+
+    def addBounds(self, net, min, max):
+        """Add a default boundary to a variable"""
+        self.bounds[net] = {'min':min, 'max':max}
 
     def getLegend(self):
         return self.legend
