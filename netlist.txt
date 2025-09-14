@@ -1,11 +1,11 @@
 Balance_Marché (b) vsource dc=0.5
-Choix_Techniques (x) vsource dc=[45, 75, 485]
+Choix_Techniques (x) vsource dc=[45, 5.475, 485]
 Prix (p) vsource dc=7990
 Politique_publique (loi) vsource dc=[0.14, 150]
 Pop.Visée (b alpha) Pop.Visée
 Modèle_d'ingénérie (x SR) Modèle_d'ingénérie
 Bénéfice_economique (Q p D $) Bénéfice_economique
-Impact_de_la_voiture (Q D iv) Impact_de_la_voiture
+Impact_de_la_voiture (Q D SR iv) Impact_de_la_voiture
 Impact_des_autres_transports ($R Dr iav) Impact_des_autres_transports
 Impact_redirection_des_dépenses ($autre ia) Impact_redirection_des_dépenses
 Somme (iv ia iav itot) Somme
@@ -14,24 +14,24 @@ Besoins_Rural (Brural) vsource dc=[0.13, 50, 220]
 PA_Urbain (PAurbain) vsource dc=10000
 PA_Rural (PArural) vsource dc=9000
 Prix_efficace (p loi peff) Prix_efficace
-Satisfaction_Urbaine (Burbain PAurbain peff SR Surbain) Satisfaction_Urbaine
-Satisfaction_Rurale (Brural PArural peff SR Srural) Satisfaction_Rurale
+Satisfaction_Urbaine (Burbain PAurbain peff SR loi Surbain) Satisfaction_Urbaine
+Satisfaction_Rurale (Brural PArural peff SR loi Srural) Satisfaction_Rurale
 Ventes_Rurale (Srural alpha Qrural) Ventes_Rurale
 Ventes_Urbaine (Surbain alpha Qurbain) Ventes_Urbaine
 Distance_Rurale (Srural alpha Brural Drural) Distance_Rurale
 Distance_Urbaine (Surbain alpha Burbain Durbain) Distance_Urbaine
-BE_rural (Qrural BErural) BE_rural
-BE_urbain (Qurbain BEurbain) BE_urbain
-BE_pondéré (BErural BEurbain alpha BE) BE_pondéré
-Coût_rural (Qrural peff Drural $rural) Coût_rural
-Coût_urbain (Qurbain peff Durbain $urbain) Coût_urbain
+BE_rural ($rural $rrural alpha BErural) BE_rural
+BE_urbain ($urbain $rurbain alpha BEurbain) BE_urbain
+BE_pondéré (BErural BEurbain BE) BE_pondéré
+Coût_rural (Qrural peff Drural loi SR $rural Davg) Coût_rural
+Coût_urbain (Qurbain peff Durbain loi SR $urbain Davg) Coût_urbain
 Coût_voiture_Pondéré ($urbain $rural alpha $voiture) Coût_voiture_Pondéré
-Coût_Report_Modal_Rural (Rrural Brural $rrural) Coût_Report_Modal_Rural
-Coût_Report_Modal_Urbain (Rurbain Burbain $rurbain) Coût_Report_Modal_Urbain
+Coût_Report_Modal_Rural (Drrural $rrural) Coût_Report_Modal_Rural
+Coût_Report_Modal_Urbain (Drurbain $rurbain) Coût_Report_Modal_Urbain
 Distance_Report_Modal_Rural (Rrural Brural Drrural) Distance_Report_Modal_Rural
 Distance_Report_Modal_Urbain (Rurbain Burbain Drurbain) Distance_Report_Modal_Urbain
-Coût_Report_Modal_Pondéré ($rrural $rurbain alpha $R) Coût_Report_Modal_Pondéré
-Distance_Report_Modal_Pondéré (Drrural Drurbain alpha Dr) Distance_Report_Modal_Pondéré
+Coût_Report_Modal_Pondéré ($rurbain $rrural alpha $R) Coût_Report_Modal_Pondéré
+Distance_Report_Modal_Pondéré (Drurbain Drrural alpha Dr) Distance_Report_Modal_Pondéré
 $Transport ($R $voiture $transport) $Transport
 Autre_dépenses ($transport $autre) Autre_dépenses
 Ventes_totales (Qrural Qurbain Q) Ventes_totales

@@ -11,12 +11,9 @@ netlist = Netlist()
 b_i = 0.5
 netlist.addLegend("alpha", ["urbain", "rural"])
 
-x_i = [45, 75, 485]
 netlist.addLegend("x", ["Vmax (km/h)", "Autonomie (kWh)", "mass (kg)"])
 
-p_i = 7990 # Initial price
 
-loi_i = [0.14, 150]
 netlist.addLegend("loi", ["Prix energie ($/km)", "Subvention ($/voiture)"])
 
 netlist.addLegend("SR", ["Rendement (kW/km)", "Distance max (km)"])
@@ -38,13 +35,13 @@ netlist.add(Constant("Prix", "p", p_i))
 netlist.add(Constant("Politique publique", "loi", loi_i))
 
 netlist.add(Block("Pop.Visée", lambda x: [[x, 1-x]], ["b"], ["alpha"]))
-netlist.add(Block("Modèle d'ingénérie", lambda x:[0], ["x"], ["SR"]))
+netlist.add(Block("Modèle d'ingénérie", modele_ingénerie, ["x"], ["SR"]))
 
-netlist.add(Block("Bénéfice economique", lambda a,b,c:[0], ["Q", "p", "D"], ["$"]))
+netlist.add(Block("Bénéfice economique", benefice_economique, ["Q", "p", "D"], ["$"]))
 
-netlist.add(Block("Impact de la voiture", lambda a,b:[0], ["Q", "D"], ["iv"]))
-netlist.add(Block("Impact des autres transports", lambda a,b:[0], ["$R", "Dr"], ["iav"]))
-netlist.add(Block("Impact redirection des dépenses", lambda c:[0], ["$autre"], ["ia"]))
+netlist.add(Block("Impact de la voiture", impact_voiture, ["Q", "D", "SR"], ["iv"]))
+netlist.add(Block("Impact des autres transports", impact_autre_transports, ["$R", "Dr"], ["iav"]))
+netlist.add(Block("Impact redirection des dépenses", impact_redirection_dépense, ["$autre"], ["ia"]))
 
 netlist.add(Block("Somme", lambda a,b,c:[a+b+c], ["iv", "ia", "iav"], ["itot"]))
 
@@ -59,39 +56,39 @@ netlist.add(Constant("Besoins Rural", "Brural", Brural_i))
 netlist.add(Constant("PA Urbain", "PAurbain", PAurbain_i))
 netlist.add(Constant("PA Rural", "PArural", PArural_i))
 
-netlist.add(Block("Prix efficace", lambda a,b:[0], ["p", "loi"], ["peff"]))
+netlist.add(Block("Prix efficace", prix_efficace, ["p", "loi"], ["peff"]))
 
-netlist.add(Block("Satisfaction Urbaine", lambda a,b,c,d:[0], ["Burbain", "PAurbain", "peff", "SR"], ["Surbain"]))
-netlist.add(Block("Satisfaction Rurale", lambda a,b,c,d:[0], ["Brural", "PArural", "peff", "SR"], ["Srural"]))
+netlist.add(Block("Satisfaction Urbaine", satisfaction_pop, ["Burbain", "PAurbain", "peff", "SR", "loi"], ["Surbain"]))
+netlist.add(Block("Satisfaction Rurale", satisfaction_pop, ["Brural", "PArural", "peff", "SR", "loi"], ["Srural"]))
 
-netlist.add(Block("Ventes Rurale", lambda a,b:[0], ["Srural", "alpha"], ["Qrural"]))
-netlist.add(Block("Ventes Urbaine", lambda a,b:[0], ["Surbain", "alpha"], ["Qurbain"]))
+netlist.add(Block("Ventes Rurale", lambda a,b:[np.linalg.norm(a)*b[1]*Pi_rural], ["Srural", "alpha"], ["Qrural"]))
+netlist.add(Block("Ventes Urbaine", lambda a,b:[np.linalg.norm(a)*b[0]*Pi_urbain], ["Surbain", "alpha"], ["Qurbain"]))
 
-netlist.add(Block("Distance Rurale", lambda a,b,c:[0], ["Srural", "alpha", "Brural"], ["Drural"]))
-netlist.add(Block("Distance Urbaine", lambda a,b,c:[0], ["Surbain", "alpha", "Burbain"], ["Durbain"]))
+netlist.add(Block("Distance Rurale", lambda a,b,c:distance_avec_satisfaction(a, b, c, 1), ["Srural", "alpha", "Brural"], ["Drural"]))
+netlist.add(Block("Distance Urbaine", lambda a,b,c:distance_avec_satisfaction(a, b, c, 0), ["Surbain", "alpha", "Burbain"], ["Durbain"]))
 
-netlist.add(Block("BE rural", lambda a:[0], ["Qrural"], ["BErural"]))
-netlist.add(Block("BE urbain", lambda a:[0], ["Qurbain"], ["BEurbain"]))
+netlist.add(Block("BE rural", lambda a,b,c:bien_etre(a,b,c,1), ["$rural", "$rrural", "alpha"], ["BErural"]))
+netlist.add(Block("BE urbain", lambda a,b,c:bien_etre(a,b,c,0), ["$urbain", "$rurbain", "alpha"], ["BEurbain"]))
 
-netlist.add(Block("BE pondéré", lambda a,b,c:[0], ["BErural", "BEurbain", "alpha"], ["BE"]))
+netlist.add(Block("BE pondéré", lambda a,b:[a+b], ["BErural", "BEurbain"], ["BE"]))
 
-netlist.add(Block("Coût rural", lambda a,b,c:[0], ["Qrural", "peff", "Drural"], ["$rural"]))
-netlist.add(Block("Coût urbain", lambda a,b,c:[0], ["Qurbain", "peff", "Durbain"], ["$urbain"]))
+netlist.add(Block("Coût rural", cout_user_voiture, ["Qrural", "peff", "Drural", "loi", "SR"], ["$rural", "Davg"]))
+netlist.add(Block("Coût urbain", cout_user_voiture, ["Qurbain", "peff", "Durbain", "loi", "SR"], ["$urbain", "Davg"]))
 
-netlist.add(Block("Coût voiture Pondéré", lambda a,b,c:[0], ["$urbain", "$rural", "alpha"], ["$voiture"]))
+netlist.add(Block("Coût voiture Pondéré", lambda a,b,alpha:[a*alpha[0]+b*alpha[1]], ["$urbain", "$rural", "alpha"], ["$voiture"]))
 
-netlist.add(Block("Coût Report Modal Rural", lambda a,b:[0], ["Rrural", "Brural"], ["$rrural"]))
-netlist.add(Block("Coût Report Modal Urbain", lambda a,b:[0], ["Rurbain", "Burbain"], ["$rurbain"]))
+netlist.add(Block("Coût Report Modal Rural", cout_report_modal, ["Drrural"], ["$rrural"]))
+netlist.add(Block("Coût Report Modal Urbain", cout_report_modal, ["Drurbain"], ["$rurbain"]))
 
-netlist.add(Block("Distance Report Modal Rural", lambda a,b:[0], ["Rrural", "Brural"], ["Drrural"]))
-netlist.add(Block("Distance Report Modal Urbain", lambda a,b:[0], ["Rurbain", "Burbain"], ["Drurbain"]))
+netlist.add(Block("Distance Report Modal Rural", distance_avec_report_modal, ["Rrural", "Brural"], ["Drrural"]))
+netlist.add(Block("Distance Report Modal Urbain", distance_avec_report_modal, ["Rurbain", "Burbain"], ["Drurbain"]))
 
-netlist.add(Block("Coût Report Modal Pondéré", lambda a,b,c:[0], ["$rrural", "$rurbain", "alpha"], ["$R"]))
-netlist.add(Block("Distance Report Modal Pondéré", lambda a,b,c:[0], ["Drrural", "Drurbain", "alpha"], ["Dr"]))
+netlist.add(Block("Coût Report Modal Pondéré", lambda a,b,alpha:[a*alpha[0]+b*alpha[1]], ["$rurbain", "$rrural", "alpha"], ["$R"]))
+netlist.add(Block("Distance Report Modal Pondéré", lambda a,b,alpha:[a*alpha[0]+b*alpha[1]], ["Drurbain", "Drrural", "alpha"], ["Dr"]))
 
 netlist.add(Block("$Transport", lambda a,b:[a+b], ["$R", "$voiture"], ["$transport"]))
 
-netlist.add(Block("Autre dépenses", lambda a:[0], ["$transport"], ["$autre"]))
+netlist.add(Block("Autre dépenses", autre_depenses, ["$transport"], ["$autre"]))
 
 netlist.add(Block("Ventes totales", lambda a,b:[a+b], ["Qrural", "Qurbain"], ["Q"]))
 netlist.add(Block("Distance totales", lambda a,b:[a+b], ["Drural", "Durbain"], ["D"]))
