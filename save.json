@@ -29,6 +29,20 @@
                 ],
                 "name": "Politique_publique"
             },
+            "Pond\u00e9ration_Rural": {
+                "pos": [
+                    -708.1643571197283,
+                    -166.84500560412437
+                ],
+                "name": "Pond\u00e9ration_Rural"
+            },
+            "Pond\u00e9ration_Urbain": {
+                "pos": [
+                    -719.2873574933366,
+                    -582.103686218834
+                ],
+                "name": "Pond\u00e9ration_Urbain"
+            },
             "Pop.Vis\u00e9e": {
                 "pos": [
                     -461.83648433267854,

@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 netlist = Netlist()
 
 
-b_i = 0.5
+b_i = 0.3
 netlist.addLegend("alpha", ["urbain", "rural"])
 netlist.addLegend("x", ["Vmax (km/h)", "Autonomie (kWh)", "mass (kg)"])
 netlist.addLegend("loi", ["Prix energie ($/km)", "Subvention ($/voiture)"])
@@ -18,8 +18,6 @@ netlist.addLegend("SR", ["Rendement (kW/km)", "Distance max (km)"])
 netlist.addLegend("$r", ["$ en bus", "$ en train"])
 netlist.addLegend("Dr", ["km en bus", "km en train"])
 
-Burbain_i = [0.2, 150, 50]
-Brural_i = [0.13, 50, 220]
 netlist.addLegend("Burbain", ["Prix de revient ($/km)", "km en ville", "km hors ville"])
 netlist.addLegend("Brural", ["Prix de revient ($/km)", "km en ville", "km hors ville"])
 netlist.addLegend("Srural", ["Prix de revient ($/km)", "km en ville", "km hors ville"])
@@ -44,6 +42,8 @@ netlist.add(Constant("Balance Marché", "b", b_i))
 netlist.add(Constant("Choix Techniques", "x", x_i))
 netlist.add(Constant("Prix", "p", p_i))
 netlist.add(Constant("Politique publique", "loi", loi_i))
+netlist.add(Constant("Pondération Rural", "pondrural", pondrural_i))
+netlist.add(Constant("Pondération Urbain", "pondurbain", pondurbain_i))
 
 netlist.add(Block("Pop.Visée", lambda x: [[x, 1-x]], ["b"], ["alpha"]))
 netlist.add(Block("Modèle d'ingénérie", modele_ingénerie, ["x"], ["SR"]))
@@ -69,8 +69,8 @@ netlist.add(Constant("PA Rural", "PArural", PArural_i))
 
 netlist.add(Block("Prix efficace", prix_efficace, ["p", "loi"], ["peff"]))
 
-netlist.add(Block("Satisfaction Urbaine", satisfaction_pop, ["Burbain", "PAurbain", "peff", "SR", "loi"], ["Surbain"]))
-netlist.add(Block("Satisfaction Rurale", satisfaction_pop, ["Brural", "PArural", "peff", "SR", "loi"], ["Srural"]))
+netlist.add(Block("Satisfaction Urbaine", satisfaction_pop, ["Burbain", "PAurbain", "peff", "SR", "loi","pondurbain"], ["Surbain"]))
+netlist.add(Block("Satisfaction Rurale", satisfaction_pop, ["Brural", "PArural", "peff", "SR", "loi","pondrural"], ["Srural"]))
 
 netlist.add(Block("Ventes Rurale", lambda a,b:[np.linalg.norm(a)*b[1]*Pi_rural], ["Srural", "alpha"], ["Qrural"]))
 netlist.add(Block("Ventes Urbaine", lambda a,b:[np.linalg.norm(a)*b[0]*Pi_urbain], ["Surbain", "alpha"], ["Qurbain"]))

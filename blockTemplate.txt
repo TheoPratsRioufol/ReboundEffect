@@ -2,6 +2,8 @@ vsource 0 1
 vsource 0 1
 vsource 0 1
 vsource 0 1
+vsource 0 1
+vsource 0 1
 Pop.Visée 1 1
 Modèle_d'ingénérie 1 1
 Bénéfice_economique 3 1
@@ -14,8 +16,8 @@ vsource 0 1
 vsource 0 1
 vsource 0 1
 Prix_efficace 2 1
-Satisfaction_Urbaine 5 1
-Satisfaction_Rurale 5 1
+Satisfaction_Urbaine 6 1
+Satisfaction_Rurale 6 1
 Ventes_Rurale 2 1
 Ventes_Urbaine 2 1
 Distance_Rurale 3 1

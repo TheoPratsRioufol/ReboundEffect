@@ -42,6 +42,7 @@ mass_optimal = 400
 
 eff_i = 7.3/100 # rendement initial kW/km
 autonomie_i = 75*eff_i
+autonomie_optimal = autonomie_i
 x_i = [45, autonomie_i, 485] # design initial
 
 p_i = 7990 # Initial price
@@ -63,6 +64,12 @@ loi_i = [prixKwh, 150] # Prix energie, subvention voiture
 Pi_urbain = 8000# pop urbaine
 Pi_rural = 5000# pop rurale
 ptransport_i = 8000 # Prix initial mis dans les transport
+# ["Prix de revient ($/km)", "km en ville / Recharge", "km hors ville / recharge"]
+Burbain_i = [1.5*prixKwh*eff_i, 50, 10]
+Brural_i = [1.1*prixKwh*eff_i, 20, 60]
+# Pondération des besoins
+pondrural_i = [0.5, 0.05, 0.45]
+pondurbain_i = [0.5, 0.45, 0.05]
 
 
 """ Report modal """
@@ -84,8 +91,8 @@ def maintenance(distance):
 def modele_ingénerie(x):
     """Modèle d'ingénérie. Return [SR] : [rendement (kW/km), dmax (km)]"""
     vmax, autonomie, mass = x
-    # Le rendement dépend de vmax et de la masse
-    eff = eff_i/(np.exp(-np.abs(-1*(vmax-vmax_optimal)/vmax_optimal))*np.exp(-np.abs(-0.4*(mass-mass_optimal)/mass_optimal)))
+    # Le rendement dépend de vmax et de la masse. plus autoomie grande, moins cest efficace
+    eff = eff_i/(np.exp(-np.abs(-0.8*(vmax-vmax_optimal)/vmax_optimal))*np.exp(-np.abs(-0.3*(mass-mass_optimal)/mass_optimal))*np.exp(min(0, -np.abs(-0.5*(autonomie/autonomie_optimal-1)))))
     dmax = autonomie/eff
     SR = [eff, dmax]
     return [SR]
@@ -116,7 +123,7 @@ def prix_efficace(p, loi):
     """Renvoie le prix efficace après subvention"""
     return [p - loi[1]]
 
-def satisfaction_pop(B, PA, peff, SR, loi):
+def satisfaction_pop(B, PA, peff, SR, loi, pond):
     """Renvoie la satisfaction d'une population"""
     # ["Prix de revient ($/km)", "km en ville", "km hors ville"]
     # ["Rendement (kW/km)", "Distance max (km)"]
@@ -125,8 +132,8 @@ def satisfaction_pop(B, PA, peff, SR, loi):
     def fb(SR):
         eff, dmax = SR
         pkm = eff*loi[0]
-        kmville = dmax*0.7
-        kmautre = dmax*0.3
+        kmville = dmax
+        kmautre = dmax*0.8 # more consumption
         return [pkm, kmville, kmautre]
     
     def dsat(a, b):
@@ -135,9 +142,9 @@ def satisfaction_pop(B, PA, peff, SR, loi):
     
     def d(a, b):
         """Calcule la distance entre les besoins et leur réalisation"""
-        return np.array([dsat(b[0], a[0]),
-                         dsat(a[1], b[1]),
-                         dsat(a[2], b[2])])
+        return np.array([dsat(b[0], a[0])*pond[0],
+                         dsat(a[1], b[1])*pond[1],
+                         dsat(a[2], b[2])*pond[2]])
     
     S = d(B, fb(SR))*dsat(peff, PA)
 

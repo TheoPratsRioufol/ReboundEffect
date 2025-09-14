@@ -1,7 +1,9 @@
-Balance_Marché (b) vsource dc=0.5
+Balance_Marché (b) vsource dc=0.3
 Choix_Techniques (x) vsource dc=[45, 5.475, 485]
 Prix (p) vsource dc=7990
 Politique_publique (loi) vsource dc=[0.14, 150]
+Pondération_Rural (pondrural) vsource dc=[0.5, 0.05, 0.45]
+Pondération_Urbain (pondurbain) vsource dc=[0.5, 0.45, 0.05]
 Pop.Visée (b alpha) Pop.Visée
 Modèle_d'ingénérie (x SR) Modèle_d'ingénérie
 Bénéfice_economique (Q p D $) Bénéfice_economique
@@ -9,13 +11,13 @@ Impact_de_la_voiture (Q D SR iv) Impact_de_la_voiture
 Impact_des_autres_transports ($R Dr iav) Impact_des_autres_transports
 Impact_redirection_des_dépenses ($autre ia) Impact_redirection_des_dépenses
 Somme (iv ia iav itot) Somme
-Besoins_Urbain (Burbain) vsource dc=[0.2, 150, 50]
-Besoins_Rural (Brural) vsource dc=[0.13, 50, 220]
+Besoins_Urbain (Burbain) vsource dc=[0.01533, 50, 10]
+Besoins_Rural (Brural) vsource dc=[0.011242000000000002, 20, 60]
 PA_Urbain (PAurbain) vsource dc=10000
 PA_Rural (PArural) vsource dc=9000
 Prix_efficace (p loi peff) Prix_efficace
-Satisfaction_Urbaine (Burbain PAurbain peff SR loi Surbain) Satisfaction_Urbaine
-Satisfaction_Rurale (Brural PArural peff SR loi Srural) Satisfaction_Rurale
+Satisfaction_Urbaine (Burbain PAurbain peff SR loi pondurbain Surbain) Satisfaction_Urbaine
+Satisfaction_Rurale (Brural PArural peff SR loi pondrural Srural) Satisfaction_Rurale
 Ventes_Rurale (Srural alpha Qrural) Ventes_Rurale
 Ventes_Urbaine (Surbain alpha Qurbain) Ventes_Urbaine
 Distance_Rurale (Srural alpha Brural Drural) Distance_Rurale
