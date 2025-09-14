@@ -132,7 +132,9 @@ def satisfaction_pop(B, PA, peff, SR, loi):
     
     def d(a, b):
         """Calcule la distance entre les besoins et leur réalisation"""
-        return dsat(np.array(a), np.array(b))
+        return np.array([dsat(b[0], a[0]),
+                         dsat(a[1], b[1]),
+                         dsat(a[2], b[2])])
     
     S = d(B, fb(SR))*dsat(peff, PA)
 

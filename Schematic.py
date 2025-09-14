@@ -10,10 +10,7 @@ netlist = Netlist()
 
 b_i = 0.5
 netlist.addLegend("alpha", ["urbain", "rural"])
-
 netlist.addLegend("x", ["Vmax (km/h)", "Autonomie (kWh)", "mass (kg)"])
-
-
 netlist.addLegend("loi", ["Prix energie ($/km)", "Subvention ($/voiture)"])
 
 netlist.addLegend("SR", ["Rendement (kW/km)", "Distance max (km)"])
@@ -25,6 +22,8 @@ Burbain_i = [0.2, 150, 50]
 Brural_i = [0.13, 50, 220]
 netlist.addLegend("Burbain", ["Prix de revient ($/km)", "km en ville", "km hors ville"])
 netlist.addLegend("Brural", ["Prix de revient ($/km)", "km en ville", "km hors ville"])
+netlist.addLegend("Srural", ["Prix de revient ($/km)", "km en ville", "km hors ville"])
+netlist.addLegend("Surbain", ["Prix de revient ($/km)", "km en ville", "km hors ville"])
 
 PAurbain_i = 10000 # pouvoir achat urbain
 PArural_i = 9000 # rural
