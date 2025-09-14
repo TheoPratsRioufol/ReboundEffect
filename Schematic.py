@@ -97,7 +97,7 @@ netlist.add(Block("Distance Report Modal Urbain", distance_avec_report_modal, ["
 netlist.add(Block("Coût Report Modal Pondéré", lambda a,b,alpha:[a*alpha[0]+b*alpha[1]], ["$rurbain", "$rrural", "alpha"], ["$R"]))
 netlist.add(Block("Distance Report Modal Pondéré", lambda a,b,alpha:[a*alpha[0]+b*alpha[1]], ["Drurbain", "Drrural", "alpha"], ["Dr"]))
 
-netlist.add(Block("$Transport", lambda a,b:[a+b], ["$R", "$voiture"], ["$transport"]))
+netlist.add(Block("$Transport", lambda a,b:[a[0]+a[1]+b], ["$R", "$voiture"], ["$transport"]))
 
 netlist.add(Block("Autre dépenses", autre_depenses, ["$transport"], ["$autre"]))
 

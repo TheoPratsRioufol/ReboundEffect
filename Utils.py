@@ -214,7 +214,11 @@ class Netlist():
                     for i in range(len(c.getOutputs())):
                         net = c.getOutputs()[i]
                         if net not in overridedNet:
-                            computedNet[net] = outs[i]
+                            try:
+                                computedNet[net] = outs[i]
+                            except Exception as e:
+                                print("outs=",outs)
+                                raise Exception(f"Fail to compute net {net} for block {c.getName()}")
                     # break
                     break
             # Remove the computed block

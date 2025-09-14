@@ -182,4 +182,4 @@ def cout_user_voiture(Q, peff, D, loi, SR):
 
 def autre_depenses(ptransport):
     """Calcule l'argent mis dans les autre dépenses que le transport"""
-    return ptransport_i - ptransport
+    return [ptransport_i - ptransport]
